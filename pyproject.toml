@@ -1,13 +1,13 @@
 [tool.poetry]
-name = "psa-auctions"
+name = "psa-prizes"
 version = "0.1.0"
-description = "The PSA auctions project."
+description = "The PSA prizes project."
 authors = ["Tobias Stenzel <tobias.stenzel@mailbox.org>"]
 license = "MIT"
 readme = "README.md"
-homepage = "https://github.com/tostenzel/psa-auctions"
-repository = "https://github.com/tostenzel/psa-auctions"
-keywords = ["trading cards", "grading", "PSA", "auctions", "ebay"]
+homepage = "https://github.com/tostenzel/psa-prizes"
+repository = "https://github.com/tostenzel/psa-prizes"
+keywords = ["trading cards", "grading", "PSA", "prizes", "ebay"]
 
 [tool.poetry.dependencies]
 python = "^3.7"
@@ -23,4 +23,4 @@ requires = ["poetry>=0.12"]
 build-backend = "poetry.masonry.api"
 
 [tool.poetry.scripts]
-psa-auctions = "psa_auctions.psa_scrape:main"
+psa-prizes = "psa_prizes.psa_scrape:main"
