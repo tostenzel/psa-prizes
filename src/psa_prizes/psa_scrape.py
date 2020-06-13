@@ -19,7 +19,7 @@ T = TypeVar("T", bound="PsaScrapePrizes")
 class PsaScrapePrizes:
     """Scrape data as specified in `urls.txt`."""
 
-    def __init__(self, card_url: str) -> None:  # noqa: D102
+    def __init__(self, card_url: str) -> None:  # noqa: D102, ANN101
         self.card_url = card_url
 
     def scrape(self: T) -> None:  # noqa: D102
@@ -79,9 +79,9 @@ class PsaScrapePrizes:
         # Write to Excel file
         df.to_csv(self.get_file_name(), index=False)
 
-    def get_image_urls(self: T, soup: Any) -> Union[List[str], List[float]]:  # noqa: D102
+    def get_image_urls(self: T, soup: Any) -> List[Union[str, float]]:  # noqa: D102
         image_data = [n for n in soup.find_all("div", {"class": "item-image"})]
-        images = []
+        images: List[Union[str, float]] = []
         for n in image_data:
             html = str(n)
             if "href" not in html:
@@ -103,12 +103,10 @@ class PsaScrapePrizes:
 
     def get_grades(
         self: T, soup: Any
-    ) -> Union[
-        Tuple[List[str], List[str]], Tuple[List[str], List[float]]
-    ]:  # noqa: D102
+    ) -> Tuple[List[str], List[Union[str, float]]]:  # noqa: D102
         grade_data = soup.find_all("div", {"class": "item item-grade"})
-        grades = []
-        quals = []
+        grades: List[str] = []
+        quals: List[Union[str, float]] = []
         for n in grade_data:
             html = str(n)
             grades.append(html.split("</span>")[1].split("<")[0].strip())
@@ -118,10 +116,10 @@ class PsaScrapePrizes:
                 quals.append(math.nan)
         return grades, quals
 
-    def get_lot_urls(self: T, soup: Any) -> Union[List[str], List[float]]:  # noqa: D102
+    def get_lot_urls(self: T, soup: Any) -> List[Union[str, float]]:  # noqa: D102
         lot_data = soup.find_all("div", {"class": "item item-lot"})
         base_url = "https://www.psacard.com"
-        lots = []
+        lots: List[Union[str, float]] = []
         for n in lot_data:
             html = str(n)
             if "href" not in html:

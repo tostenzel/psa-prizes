@@ -1,3 +1,0 @@
-# (generated with --quick)
-
-def product(a: int, b: int) -> int: ...
