@@ -4,21 +4,21 @@ rule infer
 rule check
   command = /home/tobias/Documents/psa-prizes/.nox/pytype/bin/python -m pytype.single --disable import-error --imports_info $imports --module-name $module -V 3.7 -o $out --analyze-annotated --nofail --quick $in
   description = check $module
-build /home/tobias/Documents/psa-prizes/.pytype/pyi/psa_scrape.pyi: check /home/tobias/Documents/psa-prizes/src/psa_prizes/psa_scrape.py
-  imports = /home/tobias/Documents/psa-prizes/.pytype/imports/psa_scrape.imports
-  module = psa_scrape
 build /home/tobias/Documents/psa-prizes/.pytype/pyi/noxfile.pyi: check /home/tobias/Documents/psa-prizes/noxfile.py
   imports = /home/tobias/Documents/psa-prizes/.pytype/imports/noxfile.imports
   module = noxfile
-build /home/tobias/Documents/psa-prizes/.pytype/pyi/tests/test_example_function.pyi: check /home/tobias/Documents/psa-prizes/tests/test_example_function.py
-  imports = /home/tobias/Documents/psa-prizes/.pytype/imports/tests.test_example_function.imports
-  module = tests.test_example_function
 build /home/tobias/Documents/psa-prizes/.pytype/pyi/conf.pyi: check /home/tobias/Documents/psa-prizes/docs/conf.py
   imports = /home/tobias/Documents/psa-prizes/.pytype/imports/conf.imports
   module = conf
 build /home/tobias/Documents/psa-prizes/.pytype/pyi/example_function.pyi: check /home/tobias/Documents/psa-prizes/src/psa_prizes/example_function.py
   imports = /home/tobias/Documents/psa-prizes/.pytype/imports/example_function.imports
   module = example_function
+build /home/tobias/Documents/psa-prizes/.pytype/pyi/tests/test_example_function.pyi: check /home/tobias/Documents/psa-prizes/tests/test_example_function.py
+  imports = /home/tobias/Documents/psa-prizes/.pytype/imports/tests.test_example_function.imports
+  module = tests.test_example_function
 build /home/tobias/Documents/psa-prizes/.pytype/pyi/tests/__init__.pyi: check /home/tobias/Documents/psa-prizes/tests/__init__.py
   imports = /home/tobias/Documents/psa-prizes/.pytype/imports/tests.__init__.imports
   module = tests.__init__
+build /home/tobias/Documents/psa-prizes/.pytype/pyi/psa_scrape.pyi: check /home/tobias/Documents/psa-prizes/src/psa_prizes/psa_scrape.py
+  imports = /home/tobias/Documents/psa-prizes/.pytype/imports/psa_scrape.imports
+  module = psa_scrape

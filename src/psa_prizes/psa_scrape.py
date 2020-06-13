@@ -19,7 +19,7 @@ T = TypeVar("T", bound="PsaScrapePrizes")
 class PsaScrapePrizes:
     """Scrape data as specified in `urls.txt`."""
 
-    def __init__(self: T, card_url: str) -> None:  # noqa: D102
+    def __init__(self, card_url: str) -> None:  # noqa: D102
         self.card_url = card_url
 
     def scrape(self: T) -> None:  # noqa: D102
@@ -79,7 +79,7 @@ class PsaScrapePrizes:
         # Write to Excel file
         df.to_csv(self.get_file_name(), index=False)
 
-    def get_image_urls(self: T, soup: Any) -> List[str]:  # noqa: D102
+    def get_image_urls(self: T, soup: Any) -> Union[List[str], List[float]]:  # noqa: D102
         image_data = [n for n in soup.find_all("div", {"class": "item-image"})]
         images = []
         for n in image_data:
@@ -118,7 +118,7 @@ class PsaScrapePrizes:
                 quals.append(math.nan)
         return grades, quals
 
-    def get_lot_urls(self: T, soup: Any) -> List[str]:  # noqa: D102
+    def get_lot_urls(self: T, soup: Any) -> Union[List[str], List[float]]:  # noqa: D102
         lot_data = soup.find_all("div", {"class": "item item-lot"})
         base_url = "https://www.psacard.com"
         lots = []
