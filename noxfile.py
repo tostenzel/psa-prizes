@@ -6,7 +6,7 @@ from typing import Any
 import nox
 from nox.sessions import Session
 
-package = "hypermodern_screening"
+package = "psa_prizes"
 nox.options.sessions = "lint", "mypy", "pytype", "safety", "tests"
 locations = "src", "tests", "noxfile.py", "docs/conf.py"
 
