@@ -1,0 +1,12 @@
+# ninja log v5
+0	1519	1592058593257488581	/home/tobias/Documents/psa-prizes/.pytype/pyi/noxfile.pyi	4e6199c0d9680fa5
+1519	2121	1592058594073506918	/home/tobias/Documents/psa-prizes/.pytype/pyi/conf.pyi	63514ead1873fad2
+2121	2579	1592058594537517326	/home/tobias/Documents/psa-prizes/.pytype/pyi/tests/__init__.pyi	eb87a0a35573c8ba
+2579	3059	1592058595013528001	/home/tobias/Documents/psa-prizes/.pytype/pyi/tests/test_tested_function.pyi	c9555c15e94abe0a
+3059	5264	1592058596973571830	/home/tobias/Documents/psa-prizes/.pytype/pyi/psa_scrape.pyi	83340c627a3d3c7c
+5264	5814	1592058597769589574	/home/tobias/Documents/psa-prizes/.pytype/pyi/example_function.pyi	5f4746a1554fc9c7
+0	607	1592058961791277968	/home/tobias/Documents/psa-prizes/.pytype/pyi/tests/test_tested_function.pyi	c9555c15e94abe0a
+607	1467	1592058962655286923	/home/tobias/Documents/psa-prizes/.pytype/pyi/tests/test_example_function.pyi	c9905b1b40dc64f0
+0	497	1592059004939705269	/home/tobias/Documents/psa-prizes/.pytype/pyi/tests/test_example_function.pyi	c9905b1b40dc64f0
+0	2185	1592059068104262378	/home/tobias/Documents/psa-prizes/.pytype/pyi/psa_scrape.pyi	83340c627a3d3c7c
+2185	2712	1592059068872268685	/home/tobias/Documents/psa-prizes/.pytype/pyi/example_function.pyi	5f4746a1554fc9c7

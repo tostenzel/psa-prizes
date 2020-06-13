@@ -1,0 +1,31 @@
+[flake8]
+
+exclude = tests/__init__.py, src/psa_prizes/__init__.py
+
+select = ANN,B,B9,BLK,C,D,DAR,E,F,I,S,W
+
+docstring-convention = numpy
+
+ignore = E203, E501, W503, DAR000, S605, S607
+# E203: Whitespace before ':'
+# E501: Line too long
+# W503: Linebreak before binary operator
+# DAR000: Unexpected exception in darglint:
+# S605 Starting a process with a shell:
+# S607 Starting a process with a partial executable path
+
+
+max-complexity = 10
+
+
+# Information to order imports.
+application-import-names = hypermodern_screening, tests
+import-order-style = google
+
+
+# Bugbear allows 10% more characters.
+max-line-length = 80
+
+
+# Adress some assert issue of bandit.
+per-file-ignores = tests/*:S101, src/*:S101
