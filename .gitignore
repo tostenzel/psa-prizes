@@ -1,6 +1,9 @@
 # My additions
 /data
-
+/.nox/
+/.python-version
+/.mypy_cache/
+/.pytype/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
