@@ -1,6 +1,6 @@
 # My additions
-output/
-!output/data/1999-pokemon-game-charizard-holo.csv
+/output/
+!/output/data/1999-pokemon-game-charizard-holo.csv
 
 /.nox/
 /.python-version
