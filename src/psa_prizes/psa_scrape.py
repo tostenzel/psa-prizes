@@ -153,7 +153,7 @@ def _get_psa_certs(soup: Any) -> List[str]:  # noqa: D102
 
 def _get_file_name(card_url: str) -> str:  # noqa: D102
     f_name = card_url.split("-cards/")[1].split("/values")[0].replace("/", "-")
-    return "{}.csv".format(os.path.join("data", f_name))
+    return "{}.csv".format(os.path.join("output/data", f_name))
 
 
 #######################################################################################
@@ -173,14 +173,14 @@ def main() -> None:
             )
     except IndexError:
         # If no input url provided, read in urls from urls.txt
-        if not os.path.exists("urls.txt"):
+        if not os.path.exists("input/urls.txt"):
             raise ValueError("no input url passed and 'urls.txt' not found")
-        with open("urls.txt") as f:
+        with open("input/urls.txt") as f:
             urls = [n for n in f.read().split("\n") if n]
 
-    # If psa-scrape/data doesn't exist, create it
-    if not os.path.exists("data"):
-        os.makedirs("data")
+    # If psa-prizes/output/data doesn't exist, create it
+    if not os.path.exists("output/data"):
+        os.makedirs("output/data")
 
     # Iterate over all urls
     for url in urls:
