@@ -1,6 +1,5 @@
 # My additions
-output*
-!output/
+output/
 !/output/data/1999-pokemon-game-charizard-holo.csv
 
 /.nox/
