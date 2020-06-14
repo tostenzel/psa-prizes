@@ -25,7 +25,7 @@ print_df = True
 grade = 9
 
 df = pd.read_csv("output/data/1999-pokemon-game-charizard-holo.csv", parse_dates=["date"])
-
+# Ich will eine bessere Option, wie auf git oder in Ipython notebooks.
 print(df.to_string())
 
 
