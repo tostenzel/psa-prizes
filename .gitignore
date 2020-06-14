@@ -4,6 +4,7 @@
 /.python-version
 /.mypy_cache/
 /.pytype/
+/.idea/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
