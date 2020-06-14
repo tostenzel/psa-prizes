@@ -1,5 +1,3 @@
-# pylint: disable=missing-docstring-in-public-methdod
-
 """Scrape data from PSA and save it to one csv-file for each card."""
 
 import math
@@ -13,10 +11,10 @@ import pandas as pd
 import requests
 
 
-T = TypeVar("T", bound="PsaScrapePrizes")
+T = TypeVar("T", bound="ScrapePsaPrizes")
 
 
-class PsaScrapePrizes:
+class ScrapePsaPrizes:
     """Scrape data as specified in `urls.txt`."""
 
     def __init__(self, card_url: str) -> None:  # noqa: D102, ANN101
@@ -182,5 +180,5 @@ def main() -> None:
     # Iterate over all urls
     for url in urls:
         # Initialize class and execute web scraping
-        pap = PsaScrapePrizes(url)
+        pap = ScrapePsaPrizes(url)
         pap.scrape()
