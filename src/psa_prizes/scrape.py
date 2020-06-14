@@ -11,6 +11,24 @@ import pandas as pd
 import requests
 
 
+def parse_scrape_store() -> None:
+    """Parse urls to `scrape_psa_prizes and store as .csv-files."""
+    # Read in urls from urls.txt
+    if not os.path.exists("input/urls.txt"):
+        raise ValueError("no input url passed and 'urls.txt' not found")
+    with open("input/urls.txt") as f:
+        urls = [n for n in f.read().split("\n") if n]
+
+    # If psa-prizes/output/data doesn't exist, create it
+    if not os.path.exists("output/data"):
+        os.makedirs("output/data")
+
+    # Iterate over all urls
+    for url in urls:
+        # Initialize class and execute web scraping
+        scrape_psa_prizes(url)
+
+
 def scrape_psa_prizes(card_url: str) -> None:
     """Scrape data as specified in `urls.txt`."""
     print("collecting data for {}".format(card_url))
@@ -96,6 +114,7 @@ def _get_sale_dates(soup: Any) -> List[str]:  # noqa: D102
 
 
 def _get_grades(soup: Any) -> Tuple[List[str], List[Union[str, float]]]:  # noqa: D102
+    """It is important for parsing that grades are strings."""
     grade_data = soup.find_all("div", {"class": "item item-grade"})
     grades: List[str] = []
     quals: List[Union[str, float]] = []
@@ -155,34 +174,3 @@ def _get_file_name(card_url: str) -> str:  # noqa: D102
     f_name = card_url.split("-cards/")[1].split("/values")[0].replace("/", "-")
     return "{}.csv".format(os.path.join("output/data", f_name))
 
-
-#######################################################################################
-# main
-#######################################################################################
-
-
-def main() -> None:
-    """Call `PsaScrapePrizes` using `urls.txt`."""
-    # Input validation
-    try:
-        input_url = [sys.argv[1]]
-        if not input_url or not isinstance(input_url, str):
-            raise ValueError(
-                "input must be a url string with base \
-                 'https://www.psacard.com/auctionprices/'"
-            )
-    except IndexError:
-        # If no input url provided, read in urls from urls.txt
-        if not os.path.exists("input/urls.txt"):
-            raise ValueError("no input url passed and 'urls.txt' not found")
-        with open("input/urls.txt") as f:
-            urls = [n for n in f.read().split("\n") if n]
-
-    # If psa-prizes/output/data doesn't exist, create it
-    if not os.path.exists("output/data"):
-        os.makedirs("output/data")
-
-    # Iterate over all urls
-    for url in urls:
-        # Initialize class and execute web scraping
-        scrape_psa_prizes(url)
