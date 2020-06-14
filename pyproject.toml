@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "psa-prizes"
-version = "0.1.1"
+version = "0.1.2"
 description = "The PSA prizes project."
 authors = ["Tobias Stenzel <tobias.stenzel@mailbox.org>"]
 license = "MIT"
