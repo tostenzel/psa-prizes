@@ -1,6 +1,5 @@
 # My additions
-/output/*
-!/output/data/
+/output/data/**
 !/output/data/1999-pokemon-game-charizard-holo.csv
 
 /.nox/
