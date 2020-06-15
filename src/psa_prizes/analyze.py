@@ -7,10 +7,10 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 
 from IPython.display import display
-
+"""Overall problem: cols with strings seem to be entirely converted to strings"""
 
 # Iterate over all urls
-def _unusual_grades_msg(df, grade):
+def _msg_unusual_grades(df, grade):
     """Print the number of unusual grades."""
     grades = np.arange(0, 10.5, 0.5).astype(float)
     catch_grades = []
@@ -25,7 +25,7 @@ def _unusual_grades_msg(df, grade):
           f' These grades are in {set(catch_grades)}')
 
 
-def _n_grade_msg(df, grade):
+def _msg_n_grade(df, grade):
     """Print the number of cards with grade `grade`."""
     n_cards = len(df)
     n_grade = len(df[(df['grade']) == grade])
@@ -42,7 +42,7 @@ def _filter_grade_data(df, grade):
     return df
 
 
-def _avg_ann_growth_msg(df):
+def _msg_avg_ann_growth(df):
     """Print the average annual prize growth."""
     df['year'] = pd.DatetimeIndex(df['date']).year
     df['avg_prize_in_year'] = df.groupby('year')['prize'].transform('mean')
@@ -100,51 +100,53 @@ def _scatter_prize_time(df, title):
 """Paths need to be revisited after I close pycharm."""
 os.chdir('../..')
 
+
+
+
 # df = pd.read_csv("output/data/1999-pokemon-game-charizard-holo.csv", parse_dates=["date"])
-#df = pd.read_csv("output/data/2000-pokemon-rocket-dark-charizard-holo.csv", parse_dates=["date"])
+# df = pd.read_csv("output/data/2000-pokemon-rocket-dark-charizard-holo.csv", parse_dates=["date"])
 # df = pd.read_csv("output/data/2002-nintendo-pokemon-neo-destiny-shining-charizard-1st-edition.csv", parse_dates=["date"])
-"""
-import glob
 
-path = r'output/data' # use your path
-all_files = glob.glob(path + "/*.csv")
 
-data = []
 
-for filename in all_files:
-    df = pd.read_csv(filename, index_col=None, header=0)
-    data.append(df)
-"""
-grade = [float(9.0)]
+
+
+
+
+
+grade = [str(9.0)]
 show_data = False
 
 
 
 
-"""Parse urls to `scrape_psa_prizes and store as .csv-files."""
 # Read in urls from urls.txt
 if not os.path.exists("input/urls.txt"):
     raise ValueError("no input url passed and 'urls.txt' not found")
 with open("input/urls.txt") as f:
     urls = [n for n in f.read().split("\n") if n]
+ 
 for url in urls:
     card_name = _get_card_name(url)
-    df = pd.read_csv("{}.csv".format(os.path.join("output/data", card_name )))
+    df = pd.read_csv(f'output/data/{card_name}.csv', parse_dates=["date"])
 
+    # Parse grade col. If some grades are string, the whole col is converted to str.
+    df["grade"] = df["grade"].astype(str)
 
+    if show_data is True:
+        display(df)
+    else:
+        pass
 
     for g in grade:
 
+        _msg_unusual_grades(df, g)
 
+        _msg_n_grade(df, g)
 
+        df = _filter_grade_data(df, g)
 
-        _unusual_grades_msg(df, grade)
-
-        _n_grade_msg(df, grade)
-
-        df = _filter_grade_data(df, grade)
-
-        _avg_ann_growth_msg(df)
+        _msg_avg_ann_growth(df)
 
         # ToDo: add grade to title
-        _scatter_prize_time(df, f'{card_name}-grade-{grade}')
+        _scatter_prize_time(df, card_name)
