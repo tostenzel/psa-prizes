@@ -6,8 +6,53 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 
-from IPython.display import display
-"""Overall problem: cols with strings seem to be entirely converted to strings"""
+from IPython import display
+
+def analyze(grades, show_data = False):
+    """Print info messages and plot prize timeline."""
+
+    # Create output folder for pictures
+    if not os.path.exists("output/img"):
+        os.makedirs("output/img")
+
+    # Read in urls from urls.txt
+    if not os.path.exists("input/urls.txt"):
+        raise ValueError("no input url passed and 'urls.txt' not found")
+    with open("input/urls.txt") as f:
+        urls = [n for n in f.read().split("\n") if n]
+
+    for url in urls:
+        # Get card_name from urls
+        card_name = _get_card_name(url)
+
+        df = pd.read_csv(f'output/data/{card_name}.csv', parse_dates=["date"])
+
+        # Important: Parse col as str because one str may convert the whole col to str
+        df["grade"] = df["grade"].astype(str)
+        grades = [str(float(g)) for g in grades]
+
+        if show_data is True:
+            display(df)
+        else:
+            pass
+
+        for g in grades:
+
+            _msg_unusual_grades(df, g)
+
+            _msg_n_grade(df, g)
+
+            df_fil = _filter_grade_data(df, g)
+
+            _msg_avg_ann_growth(df_fil)
+
+            fig = _scatter_prize_time(df_fil, f'{card_name}-grade-{g}')
+
+            path = f'output/img/{card_name}-grade-{g}.png'
+            print(f'– Find the graph for the above info in {path}')
+
+            plt.savefig(path)
+            plt.show()
 
 # Iterate over all urls
 def _msg_unusual_grades(df, grade):
@@ -83,70 +128,19 @@ def _scatter_prize_time(df, title):
     p = np.poly1d(fit)
     ax.plot(x, p(x), 'r--')
 
-    ## Rotate date labels automatically
+    # Rotate date labels
     fig.autofmt_xdate()
+
     ax.grid(linestyle="-", color='black', alpha=0.25)
+    ax.tick_params(length=6, width=2, labelsize=20)
     ax.set_title(title, fontsize=28)
     ax.set_xlabel(xlabel='Date', size=26, labelpad=14)
     ax.set_ylabel(ylabel='Prize in $', size=26, labelpad=14)
-    ax.grid(linestyle="-", color='black', alpha=0.25)
-    ax.tick_params(length=6, width=2, labelsize=20)
 
     fig.tight_layout()
 
-    plt.show()
+    return fig
 
-
-"""Paths need to be revisited after I close pycharm."""
 os.chdir('../..')
+analyze([8, 9])
 
-
-
-
-# df = pd.read_csv("output/data/1999-pokemon-game-charizard-holo.csv", parse_dates=["date"])
-# df = pd.read_csv("output/data/2000-pokemon-rocket-dark-charizard-holo.csv", parse_dates=["date"])
-# df = pd.read_csv("output/data/2002-nintendo-pokemon-neo-destiny-shining-charizard-1st-edition.csv", parse_dates=["date"])
-
-
-
-
-
-
-
-
-grade = [str(9.0)]
-show_data = False
-
-
-
-
-# Read in urls from urls.txt
-if not os.path.exists("input/urls.txt"):
-    raise ValueError("no input url passed and 'urls.txt' not found")
-with open("input/urls.txt") as f:
-    urls = [n for n in f.read().split("\n") if n]
- 
-for url in urls:
-    card_name = _get_card_name(url)
-    df = pd.read_csv(f'output/data/{card_name}.csv', parse_dates=["date"])
-
-    # Parse grade col. If some grades are string, the whole col is converted to str.
-    df["grade"] = df["grade"].astype(str)
-
-    if show_data is True:
-        display(df)
-    else:
-        pass
-
-    for g in grade:
-
-        _msg_unusual_grades(df, g)
-
-        _msg_n_grade(df, g)
-
-        df = _filter_grade_data(df, g)
-
-        _msg_avg_ann_growth(df)
-
-        # ToDo: add grade to title
-        _scatter_prize_time(df, card_name)
