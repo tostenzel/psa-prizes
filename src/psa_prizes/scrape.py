@@ -2,13 +2,30 @@
 
 import math
 import os
-import sys
 import time
 from typing import Any, List, Tuple, Union
 
 from bs4 import BeautifulSoup
 import pandas as pd
 import requests
+
+
+def parse_scrape_store() -> None:
+    """Parse urls to `scrape_psa_prizes` and store as .csv-files."""
+    # Read in urls from urls.txt
+    if not os.path.exists("input/urls.txt"):
+        raise ValueError("no input url passed and 'urls.txt' not found")
+    with open("input/urls.txt") as f:
+        urls = [n for n in f.read().split("\n") if n]
+
+    # If psa-prizes/output/data doesn't exist, create it
+    if not os.path.exists("output/data"):
+        os.makedirs("output/data")
+
+    # Iterate over all urls
+    for url in urls:
+        # Initialize class and execute web scraping
+        scrape_psa_prizes(url)
 
 
 def scrape_psa_prizes(card_url: str) -> None:
@@ -27,7 +44,7 @@ def scrape_psa_prizes(card_url: str) -> None:
     images = _get_image_urls(soup)
 
     # Get sale prices
-    prices = _get_prices(soup)
+    prizes = _get_prizes(soup)
 
     # Get dates of the sales
     dates = _get_sale_dates(soup)
@@ -56,7 +73,7 @@ def scrape_psa_prizes(card_url: str) -> None:
             "date": dates,
             "grade": grades,
             "qualifier": quals,
-            "price": prices,
+            "prize": prizes,
             "auction_house": a_houses,
             "seller": sellers,
             "sale_type": sale_types,
@@ -82,11 +99,12 @@ def _get_image_urls(soup: Any) -> List[Union[str, float]]:  # noqa: D102
     return images
 
 
-def _get_prices(soup: Any) -> List[float]:  # noqa: D102
+def _get_prizes(soup: Any) -> List[float]:  # noqa: D102
     prices = [
         float(n.string.strip("$").replace(",", ""))
         for n in soup.find_all("div", {"class": "item item-price"})
     ]
+
     return prices
 
 
@@ -95,17 +113,24 @@ def _get_sale_dates(soup: Any) -> List[str]:  # noqa: D102
     return dates
 
 
-def _get_grades(soup: Any) -> Tuple[List[str], List[Union[str, float]]]:  # noqa: D102
+def _get_grades(
+    soup: Any
+) -> Tuple[List[Union[str, float]], List[Union[str, float]]]:  # noqa: D102
+    """Prefer grades as floats not strings. One str converts whole col to str."""
     grade_data = soup.find_all("div", {"class": "item item-grade"})
-    grades: List[str] = []
+    grades: List[Union[str, float]] = []
     quals: List[Union[str, float]] = []
     for n in grade_data:
         html = str(n)
-        grades.append(html.split("</span>")[1].split("<")[0].strip())
+        try:
+            grades.append(float(html.split("</span>")[1].split("<")[0].strip()))
+        except ValueError:
+            grades.append(html.split("</span>")[1].split("<")[0].strip())
         if "<strong>" in html:
             quals.append(html.split("<strong>")[1].split("<")[0].strip())
         else:
             quals.append(math.nan)
+
     return grades, quals
 
 
@@ -143,9 +168,9 @@ def _get_sale_types(soup: Any) -> List[str]:  # noqa: D102
     return sale_types
 
 
-def _get_psa_certs(soup: Any) -> List[str]:  # noqa: D102
+def _get_psa_certs(soup: Any) -> List[int]:  # noqa: D102
     certs = [
-        str(n).split("</span>")[1].split("<")[0]
+        int(str(n).split("</span>")[1].split("<")[0])
         for n in soup.find_all("div", {"class": "item item-cert"})
     ]
     return certs
@@ -153,36 +178,4 @@ def _get_psa_certs(soup: Any) -> List[str]:  # noqa: D102
 
 def _get_file_name(card_url: str) -> str:  # noqa: D102
     f_name = card_url.split("-cards/")[1].split("/values")[0].replace("/", "-")
-    return "{}.csv".format(os.path.join("data", f_name))
-
-
-#######################################################################################
-# main
-#######################################################################################
-
-
-def main() -> None:
-    """Call `PsaScrapePrizes` using `urls.txt`."""
-    # Input validation
-    try:
-        input_url = [sys.argv[1]]
-        if not input_url or not isinstance(input_url, str):
-            raise ValueError(
-                "input must be a url string with base \
-                 'https://www.psacard.com/auctionprices/'"
-            )
-    except IndexError:
-        # If no input url provided, read in urls from urls.txt
-        if not os.path.exists("urls.txt"):
-            raise ValueError("no input url passed and 'urls.txt' not found")
-        with open("urls.txt") as f:
-            urls = [n for n in f.read().split("\n") if n]
-
-    # If psa-scrape/data doesn't exist, create it
-    if not os.path.exists("data"):
-        os.makedirs("data")
-
-    # Iterate over all urls
-    for url in urls:
-        # Initialize class and execute web scraping
-        scrape_psa_prizes(url)
+    return "{}.csv".format(os.path.join("output/data", f_name))
