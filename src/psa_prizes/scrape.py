@@ -2,7 +2,6 @@
 
 import math
 import os
-import sys
 import time
 from typing import Any, List, Tuple, Union
 
@@ -12,7 +11,7 @@ import requests
 
 
 def parse_scrape_store() -> None:
-    """Parse urls to `scrape_psa_prizes and store as .csv-files."""
+    """Parse urls to `scrape_psa_prizes` and store as .csv-files."""
     # Read in urls from urls.txt
     if not os.path.exists("input/urls.txt"):
         raise ValueError("no input url passed and 'urls.txt' not found")
@@ -114,10 +113,12 @@ def _get_sale_dates(soup: Any) -> List[str]:  # noqa: D102
     return dates
 
 
-def _get_grades(soup: Any) -> Tuple[List[Union[str, float]], List[Union[str, float]]]:  # noqa: D102
-    """It is important for parsing that grades are mainly floats and not strings."""
+def _get_grades(
+    soup: Any
+) -> Tuple[List[Union[str, float]], List[Union[str, float]]]:  # noqa: D102
+    """Prefer grades as floats not strings. One str converts whole col to str."""
     grade_data = soup.find_all("div", {"class": "item item-grade"})
-    grades: List[str] = []
+    grades: List[Union[str, float]] = []
     quals: List[Union[str, float]] = []
     for n in grade_data:
         html = str(n)
@@ -178,4 +179,3 @@ def _get_psa_certs(soup: Any) -> List[int]:  # noqa: D102
 def _get_file_name(card_url: str) -> str:  # noqa: D102
     f_name = card_url.split("-cards/")[1].split("/values")[0].replace("/", "-")
     return "{}.csv".format(os.path.join("output/data", f_name))
-

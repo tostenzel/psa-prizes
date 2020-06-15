@@ -6,13 +6,14 @@ select = ANN,B,B9,BLK,C,D,DAR,E,F,I,S,W
 
 docstring-convention = numpy
 
-ignore = E203, E501, W503, DAR000, S605, S607
+ignore = E203, E501, W503, DAR000, S605, S607, BLK100
 # E203: Whitespace before ':'
 # E501: Line too long
 # W503: Linebreak before binary operator
 # DAR000: Unexpected exception in darglint:
 # S605 Starting a process with a shell:
 # S607 Starting a process with a partial executable path
+# BLK100 says it would make unspecified changes and then does not
 
 
 max-complexity = 10
