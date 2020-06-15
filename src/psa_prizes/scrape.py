@@ -45,7 +45,7 @@ def scrape_psa_prizes(card_url: str) -> None:
     images = _get_image_urls(soup)
 
     # Get sale prices
-    prices = _get_prices(soup)
+    prizes = _get_prizes(soup)
 
     # Get dates of the sales
     dates = _get_sale_dates(soup)
@@ -74,7 +74,7 @@ def scrape_psa_prizes(card_url: str) -> None:
             "date": dates,
             "grade": grades,
             "qualifier": quals,
-            "price": prices,
+            "prize": prizes,
             "auction_house": a_houses,
             "seller": sellers,
             "sale_type": sale_types,
@@ -100,7 +100,7 @@ def _get_image_urls(soup: Any) -> List[Union[str, float]]:  # noqa: D102
     return images
 
 
-def _get_prices(soup: Any) -> List[float]:  # noqa: D102
+def _get_prizes(soup: Any) -> List[float]:  # noqa: D102
     prices = [
         float(n.string.strip("$").replace(",", ""))
         for n in soup.find_all("div", {"class": "item item-price"})

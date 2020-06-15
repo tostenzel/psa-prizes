@@ -17,6 +17,7 @@ beautifulsoup4 = "^4.9.1"
 html5lib = "^1.0.1"
 pandas = "^1.0.4"
 matplotlib = "^3.2.1"
+IPython = "^7.15.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.4.1"

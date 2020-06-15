@@ -3,7 +3,7 @@ Entry point for the PSA Prizes package.
 This module imports all functions to make them easily callable for the end user.
 """
 
-from psa_prizes.psa_scrape import *
+from psa_prizes.scrape import *
 
 
 # Automate package version update.
