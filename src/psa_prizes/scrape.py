@@ -105,6 +105,7 @@ def _get_prizes(soup: Any) -> List[float]:  # noqa: D102
         float(n.string.strip("$").replace(",", ""))
         for n in soup.find_all("div", {"class": "item item-price"})
     ]
+
     return prices
 
 
@@ -113,18 +114,22 @@ def _get_sale_dates(soup: Any) -> List[str]:  # noqa: D102
     return dates
 
 
-def _get_grades(soup: Any) -> Tuple[List[str], List[Union[str, float]]]:  # noqa: D102
-    """It is important for parsing that grades are strings."""
+def _get_grades(soup: Any) -> Tuple[List[Union[str, float]], List[Union[str, float]]]:  # noqa: D102
+    """It is important for parsing that grades are mainly floats and not strings."""
     grade_data = soup.find_all("div", {"class": "item item-grade"})
     grades: List[str] = []
     quals: List[Union[str, float]] = []
     for n in grade_data:
         html = str(n)
-        grades.append(html.split("</span>")[1].split("<")[0].strip())
+        try:
+            grades.append(float(html.split("</span>")[1].split("<")[0].strip()))
+        except ValueError:
+            grades.append(html.split("</span>")[1].split("<")[0].strip())
         if "<strong>" in html:
             quals.append(html.split("<strong>")[1].split("<")[0].strip())
         else:
             quals.append(math.nan)
+
     return grades, quals
 
 
@@ -162,9 +167,9 @@ def _get_sale_types(soup: Any) -> List[str]:  # noqa: D102
     return sale_types
 
 
-def _get_psa_certs(soup: Any) -> List[str]:  # noqa: D102
+def _get_psa_certs(soup: Any) -> List[int]:  # noqa: D102
     certs = [
-        str(n).split("</span>")[1].split("<")[0]
+        int(str(n).split("</span>")[1].split("<")[0])
         for n in soup.find_all("div", {"class": "item item-cert"})
     ]
     return certs

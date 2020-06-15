@@ -8,20 +8,8 @@ import matplotlib.dates as mdates
 
 from IPython.display import display
 
-"""Paths need to be revisited after I close pycharm."""
-os.chdir('../..')
 
-df = pd.read_csv("output/data/1999-pokemon-game-charizard-holo.csv", parse_dates=["date"])
-
-grade = 9
-show_data = False
-
-if show_data is True:
-    display(df)
-else:
-    pass
-
-
+# Iterate over all urls
 def _unusual_grades_msg(df, grade):
     """Print the number of unusual grades."""
     grades = np.arange(0, 10.5, 0.5).astype(float)
@@ -33,25 +21,26 @@ def _unusual_grades_msg(df, grade):
         except ValueError:
             catch_grades.append(item)
 
-    print(f'Over all grades, {len(catch_grades)} of {len(df)} cards do not receive standard grades.'
-          f' These grades are {set(catch_grades)}')
+    print(f'– Over all grades, {len(catch_grades)} of {len(df)} cards do not receive standard grades.'
+          f' These grades are in {set(catch_grades)}')
 
 
 def _n_grade_msg(df, grade):
     """Print the number of cards with grade `grade`."""
     n_cards = len(df)
-    n_grade = len(df[(df['grade']) == str(grade)])
+    n_grade = len(df[(df['grade']) == grade])
     perc = round((n_grade / n_cards) * 100, 2)
 
-    print(f'The number of cards with grade {grade} is {n_grade} of {n_cards} cards. That is {perc}%.')
+    print(f'– The number of cards with grade {grade} is {n_grade} of {n_cards} cards. That is {perc}%.')
 
 
 def _filter_grade_data(df, grade):
-    """Reduce df to data and price data for cards with grade `grade`."""
-    df = df[(df['grade']) == str(grade)]
+    """Reduce df to date and price data for cards with grade `grade`."""
+    df = df[(df['grade']) == grade]
     df = df[["date", "prize"]]
 
     return df
+
 
 def _avg_ann_growth_msg(df):
     """Print the average annual prize growth."""
@@ -71,11 +60,68 @@ def _avg_ann_growth_msg(df):
     g = round(avg_df["perc_change"].mean() * 100, 2)
 
     if np.isnan(g):
-        print('Cannot compute average annual prize growth rate. Perhaps not enough observations.')
+        print('– Cannot compute average annual prize growth rate. Perhaps not enough observations.')
     else:
-        print(f'The average annual prize growth rate from {min(years)} to {max(years)} is {g}%.')
+        print(f'– The average annual prize growth rate from {min(years)} to {max(years)} is {g}%.')
 
-df.head()
+
+def _get_card_name(card_url: str) -> str:  # noqa: D102
+    c_name = card_url.split("-cards/")[1].split("/values")[0].replace("/", "-")
+    return c_name
+
+
+def _scatter_prize_time(df, title):
+    x = mdates.date2num(df['date'])
+    y = df['prize']
+
+    fig, ax = plt.subplots(figsize=(12, 9))
+
+    ax.scatter(df["date"], y, alpha=0.66)
+
+    # Draw red trend line
+    fit = np.polyfit(x, y, deg=4)
+    p = np.poly1d(fit)
+    ax.plot(x, p(x), 'r--')
+
+    ## Rotate date labels automatically
+    fig.autofmt_xdate()
+    ax.grid(linestyle="-", color='black', alpha=0.25)
+    ax.set_title(title, fontsize=28)
+    ax.set_xlabel(xlabel='Date', size=26, labelpad=14)
+    ax.set_ylabel(ylabel='Prize in $', size=26, labelpad=14)
+    ax.grid(linestyle="-", color='black', alpha=0.25)
+    ax.tick_params(length=6, width=2, labelsize=20)
+
+    fig.tight_layout()
+
+    plt.show()
+
+
+"""Paths need to be revisited after I close pycharm."""
+os.chdir('../..')
+
+# df = pd.read_csv("output/data/1999-pokemon-game-charizard-holo.csv", parse_dates=["date"])
+df = pd.read_csv("output/data/2000-pokemon-rocket-dark-charizard-holo.csv", parse_dates=["date"])
+
+grade = float(9.0)
+show_data = False
+
+if show_data is True:
+    display(df)
+else:
+    pass
+
+"""Parse urls to `scrape_psa_prizes and store as .csv-files."""
+# Read in urls from urls.txt
+if not os.path.exists("input/urls.txt"):
+    raise ValueError("no input url passed and 'urls.txt' not found")
+with open("input/urls.txt") as f:
+    urls = [n for n in f.read().split("\n") if n]
+
+# If psa-prizes/output/data doesn't exist, create it
+if not os.path.exists("output/data"):
+    os.makedirs("output/data")
+
 _unusual_grades_msg(df, grade)
 
 _n_grade_msg(df, grade)
@@ -86,21 +132,5 @@ _avg_ann_growth_msg(df)
 
 
 
-
-
-x = mdates.date2num(df['date'])
-y = df['prize']
-
-fig, ax = plt.subplots()
-
-ax.scatter(df["date"], y)
-
-# Draw red trend line
-fit = np.polyfit(x, y, deg=4)
-p = np.poly1d(fit)
-ax.plot(x, p(x), 'r--')
-
-## Rotate date labels automatically
-fig.autofmt_xdate()
-
-plt.show()
+# ToDo: add grade to title
+_scatter_prize_time(df, 'charizard-baseset-firsted. grade 9')
