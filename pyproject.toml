@@ -10,14 +10,12 @@ repository = "https://github.com/tostenzel/psa-prizes"
 keywords = ["trading cards", "grading", "PSA", "prizes", "ebay"]
 documentation = "https://psa-prizes.readthedocs.io"
 
-
 [tool.poetry.dependencies]
 python = "^3.7"
 requests = "^2.23.0"
 beautifulsoup4 = "^4.9.1"
 html5lib = "^1.0.1"
 pandas = "^1.0.4"
-codecov = "^2.1.0"
 matplotlib = "^3.2.1"
 
 [tool.poetry.dev-dependencies]
@@ -40,8 +38,9 @@ darglint = "^1.2.0"
 xdoctest = "^0.12.0"
 sphinx = "^3.0.4"
 sphinx-autodoc-typehints = "^1.10.3"
-codecov = "^2.1.0"
 restructuredtext-lint = "^1.3.0"
+codecov = "2.1.7"
+
 [tool.coverage.paths]
 source = ["src", "*/site-packages"]
 
