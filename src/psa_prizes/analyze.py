@@ -101,15 +101,25 @@ def _scatter_prize_time(df, title):
 os.chdir('../..')
 
 # df = pd.read_csv("output/data/1999-pokemon-game-charizard-holo.csv", parse_dates=["date"])
-df = pd.read_csv("output/data/2000-pokemon-rocket-dark-charizard-holo.csv", parse_dates=["date"])
+#df = pd.read_csv("output/data/2000-pokemon-rocket-dark-charizard-holo.csv", parse_dates=["date"])
+# df = pd.read_csv("output/data/2002-nintendo-pokemon-neo-destiny-shining-charizard-1st-edition.csv", parse_dates=["date"])
+"""
+import glob
 
-grade = float(9.0)
+path = r'output/data' # use your path
+all_files = glob.glob(path + "/*.csv")
+
+data = []
+
+for filename in all_files:
+    df = pd.read_csv(filename, index_col=None, header=0)
+    data.append(df)
+"""
+grade = [float(9.0)]
 show_data = False
 
-if show_data is True:
-    display(df)
-else:
-    pass
+
+
 
 """Parse urls to `scrape_psa_prizes and store as .csv-files."""
 # Read in urls from urls.txt
@@ -117,20 +127,24 @@ if not os.path.exists("input/urls.txt"):
     raise ValueError("no input url passed and 'urls.txt' not found")
 with open("input/urls.txt") as f:
     urls = [n for n in f.read().split("\n") if n]
-
-# If psa-prizes/output/data doesn't exist, create it
-if not os.path.exists("output/data"):
-    os.makedirs("output/data")
-
-_unusual_grades_msg(df, grade)
-
-_n_grade_msg(df, grade)
-
-df = _filter_grade_data(df, grade)
-
-_avg_ann_growth_msg(df)
+for url in urls:
+    card_name = _get_card_name(url)
+    df = pd.read_csv("{}.csv".format(os.path.join("output/data", card_name )))
 
 
 
-# ToDo: add grade to title
-_scatter_prize_time(df, 'charizard-baseset-firsted. grade 9')
+    for g in grade:
+
+
+
+
+        _unusual_grades_msg(df, grade)
+
+        _n_grade_msg(df, grade)
+
+        df = _filter_grade_data(df, grade)
+
+        _avg_ann_growth_msg(df)
+
+        # ToDo: add grade to title
+        _scatter_prize_time(df, f'{card_name}-grade-{grade}')
