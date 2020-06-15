@@ -8,7 +8,7 @@ import matplotlib.dates as mdates
 
 from IPython.display import display
 
-"""Paths need to be revistited after I close pycharm."""
+"""Paths need to be revisited after I close pycharm."""
 os.chdir('../..')
 
 df = pd.read_csv("output/data/1999-pokemon-game-charizard-holo.csv", parse_dates=["date"])
@@ -54,7 +54,7 @@ def _filter_grade_data(df, grade):
     return df
 
 def _avg_ann_growth_msg(df):
-    """Compute annual growth."""
+    """Print the average annual prize growth."""
     df['year'] = pd.DatetimeIndex(df['date']).year
     df['avg_prize_in_year'] = df.groupby('year')['prize'].transform('mean')
 
@@ -64,10 +64,16 @@ def _avg_ann_growth_msg(df):
     avg_df = pd.DataFrame({'year': years, 'prize': prizes})
     avg_df['perc_change'] = avg_df['prize'].pct_change(-1)
 
-    # Compute average annual growth rate in percent
-    g = avg_df["perc_change"].dropna().mean() * 100
+    # Delete first year to allow for NaNs if not enough obs
+    avg_df = avg_df[avg_df['year'] != min(avg_df['year'])]
 
-    print(f'The annual average growth rate is {g}% from {min(years)} to {max(years)}.')
+    # Compute average annual growth rate in percent
+    g = round(avg_df["perc_change"].mean() * 100, 2)
+
+    if np.isnan(g):
+        print('Cannot compute average annual prize growth rate. Perhaps not enough observations.')
+    else:
+        print(f'The average annual prize growth rate from {min(years)} to {max(years)} is {g}%.')
 
 df.head()
 _unusual_grades_msg(df, grade)
