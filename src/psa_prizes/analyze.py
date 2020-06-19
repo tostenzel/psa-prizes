@@ -37,16 +37,15 @@ def analyze(grades: List[Union[float, int]], show_data: bool = False) -> None:
             pass
 
         for g in grades_str:
-
             _msg_unusual_grades(df, g)
 
             _msg_n_grade(df, g)
 
-            df_fil = _filter_grade_data(df, g)
+            df_filt = _filter_grade_data(df, g)
 
-            _msg_avg_ann_growth(df_fil)
+            _msg_comp_ann_g(df_filt)
 
-            _scatter_prize_time(df_fil, f"{card_name}-grade-{g}")
+            _scatter_prize_time(df_filt, f"{card_name}-grade-{g}")
 
             path = f"output/img/{card_name}-grade-{g}.png"
             print(f"– Find the graph for the above info in {path}")
@@ -68,7 +67,7 @@ def _msg_unusual_grades(df: pd.DataFrame, grade: str) -> None:
 
     print(
         f"– Over all grades, {len(catch_grades)} of {len(df)} cards do not receive"
-        f"standard grades. These grades are in {set(catch_grades)}"
+        f" standard grades. These grades are in {set(catch_grades)}"
     )
 
 
@@ -92,7 +91,8 @@ def _filter_grade_data(df: pd.DataFrame, grade: str) -> pd.DataFrame:
     return df
 
 
-def _msg_avg_ann_growth(df: pd.DataFrame) -> None:
+def _msg_comp_ann_g(df: pd.DataFrame) -> None:
+
     """Print the average annual prize growth."""
     df["year"] = pd.DatetimeIndex(df["date"]).year
     df["avg_prize_in_year"] = df.groupby("year")["prize"].transform("mean")
@@ -101,23 +101,28 @@ def _msg_avg_ann_growth(df: pd.DataFrame) -> None:
     years = df["year"].drop_duplicates()
     prizes = df["avg_prize_in_year"].drop_duplicates()
     avg_df = pd.DataFrame({"year": years, "prize": prizes})
-    avg_df["perc_change"] = avg_df["prize"].pct_change(-1)
 
-    # Delete first year to allow for NaNs if not enough obs
-    avg_df = avg_df[avg_df["year"] != min(avg_df["year"])]
+    # cagr = (1 + R) ** (1 / n) - 1
+    t_0 = min(avg_df["year"])
+    t_T = max(avg_df["year"])
+    p_0 = avg_df[t_0 == avg_df['year']]['prize'].iloc[0]
+    p_T = avg_df[t_T == avg_df['year']]['prize'].iloc[0]
+    R = p_T / p_0
+    n = t_T - t_0
+    cagr = (1 + R) ** (1 / n) - 1
 
-    # Compute average annual growth rate in percent
-    g = round(avg_df["perc_change"].mean() * 100, 2)
+    # Compute compound annual growth rate in percent
+    cagr = round(cagr * 100, 2)
 
-    if np.isnan(g):
+    if np.isnan(cagr):
         print(
-            "– Cannot compute average annual prize growth rate. "
+            "– Cannot compute compound annual growth rate. "
             "Perhaps not enough observations."
         )
     else:
         print(
-            f"– The average annual prize growth rate from {min(years)} "
-            f"to {max(years)} is {g}%."
+            f"– The compound annual growth rate from {min(years)} "
+            f"to {max(years)} is {cagr}%."
         )
 
 
@@ -135,7 +140,8 @@ def _scatter_prize_time(df: pd.DataFrame, title: str) -> Any:
     ax.scatter(df["date"], y, alpha=0.66)
 
     # Draw red trend line
-    fit = np.polyfit(x, y, deg=4)
+    fit = np.polyfit(x, y, deg=3)
+
     p = np.poly1d(fit)
     ax.plot(x, p(x), "r--")
 
@@ -151,3 +157,5 @@ def _scatter_prize_time(df: pd.DataFrame, title: str) -> Any:
     fig.tight_layout()
 
     return fig
+
+
