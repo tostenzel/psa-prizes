@@ -57,13 +57,11 @@ def _msg_comp_ann_g(df: pd.DataFrame) -> None:
     avg_df = pd.DataFrame({"year": years, "prize": prizes})
 
     # cagr = (1 + R) ** (1 / n) - 1
-    #df[df.Age == df.Age.min()]
     t_0 = min(avg_df["year"])
     t_T = max(avg_df["year"])
-
-    p_0 = avg_df[avg_df['year']==t_0]['prize'].iloc[0]
-    p_T = old = avg_df[avg_df['year']==t_T]['prize'].iloc[0]
-    R = p_T/ p_0
+    p_0 = avg_df[t_0 == avg_df['year']]['prize'].iloc[0]
+    p_T = avg_df[t_T == avg_df['year']]['prize'].iloc[0]
+    R = p_T / p_0
     n = t_T - t_0
     cagr = (1 + R) ** (1 / n) - 1
 
@@ -114,7 +112,6 @@ def _scatter_prize_time(df: pd.DataFrame, title: str) -> Any:
     return fig
 
 
-
 def analyze(grades: List[Union[float, int]], show_data: bool = False) -> None:
     """Print info messages and plot prize timeline."""
     # Create output folder for pictures
@@ -143,7 +140,6 @@ def analyze(grades: List[Union[float, int]], show_data: bool = False) -> None:
             pass
 
         for g in grades_str:
-
             _msg_unusual_grades(df, g)
 
             _msg_n_grade(df, g)
