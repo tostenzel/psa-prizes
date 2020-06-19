@@ -9,6 +9,51 @@ import numpy as np
 import pandas as pd
 
 
+def analyze(grades: List[Union[float, int]], show_data: bool = False) -> None:
+    """Print info messages and plot prize timeline."""
+    # Create output folder for pictures
+    if not os.path.exists("output/img"):
+        os.makedirs("output/img")
+
+    # Read in urls from urls.txt
+    if not os.path.exists("input/urls.txt"):
+        raise ValueError("no input url passed and 'urls.txt' not found")
+    with open("input/urls.txt") as f:
+        urls = [n for n in f.read().split("\n") if n]
+
+    for url in urls:
+        # Get card_name from urls
+        card_name = _get_card_name(url)
+
+        df = pd.read_csv(f"output/data/{card_name}.csv", parse_dates=["date"])
+
+        # Important: Parse col as str because one str may convert the whole col to str
+        df["grade"] = df["grade"].astype(str)
+        grades_str: List[str] = [str(float(g)) for g in grades]
+
+        if show_data is True:
+            display(df)
+        else:
+            pass
+
+        for g in grades_str:
+            _msg_unusual_grades(df, g)
+
+            _msg_n_grade(df, g)
+
+            df_filt = _filter_grade_data(df, g)
+
+            _msg_comp_ann_g(df_filt)
+
+            _scatter_prize_time(df_filt, f"{card_name}-grade-{g}")
+
+            path = f"output/img/{card_name}-grade-{g}.png"
+            print(f"– Find the graph for the above info in {path}")
+
+            plt.savefig(path)
+            plt.show()
+
+
 def _msg_unusual_grades(df: pd.DataFrame, grade: str) -> None:
     """Print the number of unusual grades."""
     grades = np.arange(0, 10.5, 0.5).astype(float)
@@ -47,6 +92,7 @@ def _filter_grade_data(df: pd.DataFrame, grade: str) -> pd.DataFrame:
 
 
 def _msg_comp_ann_g(df: pd.DataFrame) -> None:
+
     """Print the average annual prize growth."""
     df["year"] = pd.DatetimeIndex(df["date"]).year
     df["avg_prize_in_year"] = df.groupby("year")["prize"].transform("mean")
@@ -95,6 +141,7 @@ def _scatter_prize_time(df: pd.DataFrame, title: str) -> Any:
 
     # Draw red trend line
     fit = np.polyfit(x, y, deg=3)
+
     p = np.poly1d(fit)
     ax.plot(x, p(x), "r--")
 
@@ -112,46 +159,3 @@ def _scatter_prize_time(df: pd.DataFrame, title: str) -> Any:
     return fig
 
 
-def analyze(grades: List[Union[float, int]], show_data: bool = False) -> None:
-    """Print info messages and plot prize timeline."""
-    # Create output folder for pictures
-    if not os.path.exists("output/img"):
-        os.makedirs("output/img")
-
-    # Read in urls from urls.txt
-    if not os.path.exists("input/urls.txt"):
-        raise ValueError("no input url passed and 'urls.txt' not found")
-    with open("input/urls.txt") as f:
-        urls = [n for n in f.read().split("\n") if n]
-
-    for url in urls:
-        # Get card_name from urls
-        card_name = _get_card_name(url)
-
-        df = pd.read_csv(f"output/data/{card_name}.csv", parse_dates=["date"])
-
-        # Important: Parse col as str because one str may convert the whole col to str
-        df["grade"] = df["grade"].astype(str)
-        grades_str: List[str] = [str(float(g)) for g in grades]
-
-        if show_data is True:
-            display(df)
-        else:
-            pass
-
-        for g in grades_str:
-            _msg_unusual_grades(df, g)
-
-            _msg_n_grade(df, g)
-
-            df_filt = _filter_grade_data(df, g)
-
-            _msg_comp_ann_g(df_filt)
-
-            _scatter_prize_time(df_filt, f"{card_name}-grade-{g}")
-
-            path = f"output/img/{card_name}-grade-{g}.png"
-            print(f"– Find the graph for the above info in {path}")
-
-            plt.savefig(path)
-            plt.show()
