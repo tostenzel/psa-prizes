@@ -13,16 +13,12 @@ import pandas as pd
 
 def analyze() -> None:
     """Return info messages as dict, plot prize timeline and save both."""
-    # Create output folder for pictures
-    if not os.path.exists("output/img"):
-        os.makedirs("output/img")
-
     # Read grades.
     if not os.path.exists("input/input.csv"):
         raise ValueError("'input.csv' not found")
-    df = pd.read_csv('input/input.csv', sep=';')
-    # Convert String in col to List[Union[float,int]]
-    grades = df['grades (list)'].apply(ast.literal_eval).tolist()
+    df = pd.read_csv("input/input.csv", sep=";")
+    # Convert potential String in col to List[Union[float,int]]
+    grades = df["grades (list)"].apply(ast.literal_eval).tolist()
 
     for row in range(len(df)):
         # Get card_name from urls
@@ -31,7 +27,7 @@ def analyze() -> None:
         # Important: Convert col to str b/c it is the most flexible type.
         # Otherwise, one str can can convert the whole col to str.
         df_out = pd.read_csv(f"output/data/{card_name}.csv", parse_dates=["date"])
-        df_out["grade"] = df_out['grade'].astype(str)
+        df_out["grade"] = df_out["grade"].astype(str)
 
         for g in grades[row]:
 
@@ -47,14 +43,14 @@ def analyze() -> None:
             msg_return = _str_comp_ann_g(df_filt)
 
             card_dict: Dict[str, Optional[str]] = {
-                'ident': f"{card_name}-{g}",
-                'compound annual growth': msg_return,
-                'info grades number': msg_grades_n,
+                "ident": f"{card_name}-{g}",
+                "compound annual growth": msg_return,
+                "info grades number": msg_grades_n,
             }
             if msg_grades_n is None:
                 pass
             else:
-                card_dict['info grades'] = msg_grades
+                card_dict["info grades"] = msg_grades
 
             print(card_dict)
 
@@ -123,11 +119,11 @@ def _str_comp_ann_g(df: pd.DataFrame) -> str:
         # cagr = (1 + R) ** (1 / n) - 1
         t_0 = min(avg_df["year"])
         t_T = max(avg_df["year"])
-        p_0 = avg_df[t_0 == avg_df['year']]['prize'].iloc[0]
-        p_T = avg_df[t_T == avg_df['year']]['prize'].iloc[0]
+        p_0 = avg_df[t_0 == avg_df["year"]]["prize"].iloc[0]
+        p_T = avg_df[t_T == avg_df["year"]]["prize"].iloc[0]
         R = p_T / p_0
         n = t_T - t_0
-        cagr = (1 + R) ** (1 / n) - 1
+        cagr = R ** (1 / n) - 1
 
         # Compute compound annual growth rate in percent
         cagr = round(cagr * 100, 2)

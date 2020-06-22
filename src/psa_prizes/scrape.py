@@ -16,7 +16,7 @@ def parse_scrape_store() -> None:
     if not os.path.exists("input/input.csv"):
         raise ValueError("'input.csv' not found")
 
-    df = pd.read_csv('input/input.csv', sep=';')
+    df = pd.read_csv("input/input.csv", sep=";")
     urls = df["link (str)"].tolist()
 
     # If psa-prizes/output/data doesn't exist, create it
