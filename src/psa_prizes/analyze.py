@@ -1,4 +1,5 @@
 """Analysis tools."""
+import json
 import os
 from typing import Any, List, Union
 
@@ -9,7 +10,7 @@ import numpy as np
 import pandas as pd
 
 
-def _msg_unusual_grades(df: pd.DataFrame, grade: str) -> None:
+def _str_unusual_grades(df: pd.DataFrame, grade: str) -> None:
     """Print the number of unusual grades."""
     grades = np.arange(0, 10.5, 0.5).astype(float)
     catch_grades = []
@@ -20,13 +21,13 @@ def _msg_unusual_grades(df: pd.DataFrame, grade: str) -> None:
         except ValueError:
             catch_grades.append(item)
 
-    print(
+    return (
         f"– Over all grades, {len(catch_grades)} of {len(df)} cards do not receive"
         f" standard grades. These grades are in {set(catch_grades)}"
     )
 
 
-def _msg_n_grade(df: pd.DataFrame, grade: str) -> None:
+def _str_n_grade(df: pd.DataFrame, grade: str) -> None:
     """Print the number of cards with grade `grade`."""
     n_cards = len(df)
     n_grade = len(df[(df["grade"]) == grade])
@@ -46,7 +47,7 @@ def _filter_grade_data(df: pd.DataFrame, grade: str) -> pd.DataFrame:
     return df
 
 
-def _msg_comp_ann_g(df: pd.DataFrame) -> None:
+def _str_comp_ann_g(df: pd.DataFrame) -> None:
     """Print the average annual prize growth."""
     df["year"] = pd.DatetimeIndex(df["date"]).year
     df["avg_prize_in_year"] = df.groupby("year")["prize"].transform("mean")
@@ -69,12 +70,12 @@ def _msg_comp_ann_g(df: pd.DataFrame) -> None:
     cagr = round(cagr * 100, 2)
 
     if np.isnan(cagr):
-        print(
+        return (
             "– Cannot compute compound annual growth rate. "
             "Perhaps not enough observations."
         )
     else:
-        print(
+        return (
             f"– The compound annual growth rate from {min(years)} "
             f"to {max(years)} is {cagr}%."
         )
@@ -112,7 +113,7 @@ def _scatter_prize_time(df: pd.DataFrame, title: str) -> Any:
     return fig
 
 
-def analyze(grades: List[Union[float, int]], show_data: bool = False) -> None:
+def analyze(grades: List[Union[float, int]]) -> None:
     """Print info messages and plot prize timeline."""
     # Create output folder for pictures
     if not os.path.exists("output/img"):
@@ -120,7 +121,7 @@ def analyze(grades: List[Union[float, int]], show_data: bool = False) -> None:
 
     # Read in urls from urls.txt
     if not os.path.exists("input/urls.txt"):
-        raise ValueError("no input url passed and 'urls.txt' not found")
+        raise ValueError("no input url passed or 'urls.txt' not found")
     with open("input/urls.txt") as f:
         urls = [n for n in f.read().split("\n") if n]
 
@@ -134,24 +135,41 @@ def analyze(grades: List[Union[float, int]], show_data: bool = False) -> None:
         df["grade"] = df["grade"].astype(str)
         grades_str: List[str] = [str(float(g)) for g in grades]
 
-        if show_data is True:
-            display(df)
-        else:
-            pass
-
         for g in grades_str:
-            _msg_unusual_grades(df, g)
+            msg_grades = _str_unusual_grades(df, g)
 
-            _msg_n_grade(df, g)
+            msg_grades_n = _str_n_grade(df, g)
 
             df_filt = _filter_grade_data(df, g)
 
-            _msg_comp_ann_g(df_filt)
+            msg_return = _str_comp_ann_g(df_filt)
+
+            card_dict = {
+                'ident': card_name,
+                'info grades': msg_grades,
+                'info grades number': msg_grades_n,
+                'compound annual growth': msg_return
+            }
+
+            print(card_dict)
+            if not os.path.exists("output/nmbrs"):
+                os.makedirs("output/nmbrs")
+
+            with open(f"output/nmbrs/{card_name}-grade-{g}.json", "w") as fp:
+                json.dump(card_dict, fp)
 
             _scatter_prize_time(df_filt, f"{card_name}-grade-{g}")
 
-            path = f"output/img/{card_name}-grade-{g}.png"
-            print(f"– Find the graph for the above info in {path}")
+            path_img = f"output/img/{card_name}-grade-{g}.png"
 
-            plt.savefig(path)
+            if not os.path.exists("output/img"):
+                os.makedirs("output/img")
+
+            plt.savefig(f"output/img/{card_name}-grade-{g}.png")
             plt.show()
+
+
+import os
+
+os.chdir("../../")
+analyze([8, 9])
