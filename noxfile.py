@@ -17,6 +17,8 @@ os.system("pip install poetry")
 def install_with_constraints(session: Session, *args: str, **kwargs: Any) -> None:
     """Install packages constrained by Poetry's lock file.
 
+    Notes
+    -----
     This function is a wrapper for nox.sessions.Session.install. It
     invokes pip to install packages inside of the session's virtualenv.
     Additionally, pip is passed a constraints file generated from

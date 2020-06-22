@@ -1,5 +1,6 @@
 """
 Entry point for the PSA Prizes package.
+
 This module imports all functions to make them easily callable for the end user.
 """
 
