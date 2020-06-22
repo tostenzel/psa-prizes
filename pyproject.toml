@@ -51,10 +51,11 @@ source = ["psa_prizes"]
 
 [tool.coverage.report]
 show_missing = true
-fail_under = 1
+fail_under = 0
 
 [tool.poetry.scripts]
-psa-prizes = "psa_prizes.scrape:parse_scrape_store"
+psa-prizes = "psa_prizes.main:main"
+
 [build-system]
 requires = ["poetry>=0.12"]
 build-backend = "poetry.masonry.api"

@@ -10,29 +10,30 @@ import pandas as pd
 import requests
 
 
-def parse_scrape_store() -> None:
+def scrape() -> None:
     """Parse urls to `scrape_psa_prizes` and store as .csv-files."""
-    # Read in urls from urls.txt
-    if not os.path.exists("input/urls.txt"):
-        raise ValueError("no input url passed and 'urls.txt' not found")
-    with open("input/urls.txt") as f:
-        urls = [n for n in f.read().split("\n") if n]
+    # Read in urls from urls.txt.
+    if not os.path.exists("input/input.csv"):
+        raise ValueError("'input.csv' not found")
 
-    # If psa-prizes/output/data doesn't exist, create it
+    df = pd.read_csv("input/input.csv", sep=";")
+    urls = df["link (str)"].tolist()
+
+    # If psa-prizes/output/data doesn't exist, create it.
     if not os.path.exists("output/data"):
         os.makedirs("output/data")
 
-    # Iterate over all urls
+    # Iterate over all urls.
     for url in urls:
-        # Initialize class and execute web scraping
+        # Execute web scraping.
         scrape_psa_prizes(url)
 
 
 def scrape_psa_prizes(card_url: str) -> None:
-    """Scrape data as specified in `urls.txt`."""
+    """Scrape data as specified by "link (str)" in `input.csv`."""
     print("collecting data for {}".format(card_url))
 
-    # Get html data from input url
+    # Get html data from input url.
     sess = requests.Session()
     sess.mount("https://", requests.adapters.HTTPAdapter(max_retries=5))
     r = sess.get(card_url)
@@ -40,34 +41,34 @@ def scrape_psa_prizes(card_url: str) -> None:
     soup = BeautifulSoup(r.text, "html5lib")
     time.sleep(5)
 
-    # Get image url links
+    # Get image url links.
     images = _get_image_urls(soup)
 
-    # Get sale prices
+    # Get sale prices.
     prizes = _get_prizes(soup)
 
-    # Get dates of the sales
+    # Get dates of the sales.
     dates = _get_sale_dates(soup)
 
-    # Get PSA grades and qualifiers
+    # Get PSA grades and qualifiers.
     grades, quals = _get_grades(soup)
 
-    # Get lot url links
+    # Get lot url links.
     lots = _get_lot_urls(soup)
 
-    # Get auction houses
+    # Get auction houses.
     a_houses = _get_auction_houses(soup)
 
-    # Get names of the sellers
+    # Get names of the sellers.
     sellers = _get_seller_names(soup)
 
-    # Get sale types (auction, BIN, Best Offer, etc)
+    # Get sale types (auction, BIN, Best Offer, etc).
     sale_types = _get_sale_types(soup)
 
-    # Get PSA certification numbers
+    # Get PSA certification numbers.
     certs = _get_psa_certs(soup)
 
-    # Create a dataframe
+    # Create a dataframe.
     df = pd.DataFrame(
         {
             "date": dates,
@@ -83,7 +84,7 @@ def scrape_psa_prizes(card_url: str) -> None:
         }
     )
 
-    # Write to Excel file
+    # Write to Excel file.
     df.to_csv(_get_file_name(card_url), index=False)
 
 
