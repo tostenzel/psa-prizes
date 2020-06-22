@@ -180,4 +180,3 @@ def _get_psa_certs(soup: Any) -> List[int]:  # noqa: D102
 def _get_file_name(card_url: str) -> str:  # noqa: D102
     f_name = card_url.split("-cards/")[1].split("/values")[0].replace("/", "-")
     return "{}.csv".format(os.path.join("output/data", f_name))
-

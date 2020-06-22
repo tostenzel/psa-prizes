@@ -2,16 +2,72 @@
 import ast
 import json
 import os
-from typing import Any, List, Union
+from typing import Any, Dict, Optional, Union
 
 from IPython import display
-import matplotlib.dates as mdates
+import matplotlib.dates as dates
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
 
-def _str_unusual_grades(df: pd.DataFrame, grade: str) -> None:
+def analyze() -> None:
+    """Return info messages as dict, plot prize timeline and save both."""
+    # Create output folder for pictures
+    if not os.path.exists("output/img"):
+        os.makedirs("output/img")
+
+    # Read grades.
+    if not os.path.exists("input/input.csv"):
+        raise ValueError("'input.csv' not found")
+    df = pd.read_csv('input/input.csv', sep=';')
+    # Convert String in col to List[Union[float,int]]
+    grades = df['grades (list)'].apply(ast.literal_eval).tolist()
+
+    for row in range(len(df)):
+        # Get card_name from urls
+        card_name = _get_card_name(df.iloc[row, 0])
+
+        # Important: Convert col to str b/c it is the most flexible type.
+        # Otherwise, one str can can convert the whole col to str.
+        df_out = pd.read_csv(f"output/data/{card_name}.csv", parse_dates=["date"])
+        df_out["grade"] = df_out['grade'].astype(str)
+
+        for g in grades[row]:
+
+            # Important: Parse grade as str due to reasons above.
+            g = str(float(g))
+
+            msg_grades = _str_unusual_grades(df_out, g)
+
+            msg_grades_n = _str_n_grade(df_out, g)
+
+            df_filt = _filter_grade_data(df_out, g)
+
+            msg_return = _str_comp_ann_g(df_filt)
+
+            card_dict: Dict[str, Optional[str]] = {
+                'ident': f"{card_name}-{g}",
+                'compound annual growth': msg_return,
+                'info grades number': msg_grades_n,
+            }
+            if msg_grades_n is None:
+                pass
+            else:
+                card_dict['info grades'] = msg_grades
+
+            print(card_dict)
+
+            if not os.path.exists("output/nmbrs"):
+                os.makedirs("output/nmbrs")
+
+            with open(f"output/nmbrs/{card_name}-grade-{g}.json", "w") as fp:
+                json.dump(card_dict, fp)
+
+            _scatter_prize_time(df_filt, f"{card_name}-grade-{g}")
+
+
+def _str_unusual_grades(df: pd.DataFrame, grade: str) -> Union[str, None]:
     """Print the number of unusual grades."""
     grades = np.arange(0, 10.5, 0.5).astype(float)
     catch_grades = []
@@ -31,7 +87,7 @@ def _str_unusual_grades(df: pd.DataFrame, grade: str) -> None:
         )
 
 
-def _str_n_grade(df: pd.DataFrame, grade: str) -> None:
+def _str_n_grade(df: pd.DataFrame, grade: str) -> str:
     """Print the number of cards with grade `grade`."""
     n_cards = len(df)
     n_grade = len(df[(df["grade"]) == grade])
@@ -51,9 +107,8 @@ def _filter_grade_data(df: pd.DataFrame, grade: str) -> pd.DataFrame:
     return df
 
 
-def _str_comp_ann_g(df: pd.DataFrame) -> None:
+def _str_comp_ann_g(df: pd.DataFrame) -> str:
     """Print the average annual prize growth."""
-
     if df.empty is True:
         return "There is no prize data for this grade."
     else:
@@ -93,7 +148,7 @@ def _scatter_prize_time(df: pd.DataFrame, title: str) -> Any:
     if df.empty is True:
         print("No prize data, no plot.")
     else:
-        x = mdates.date2num(df["date"])
+        x = dates.date2num(df["date"])
         y = df["prize"]
 
         fig, ax = plt.subplots(figsize=(12, 9))
@@ -120,62 +175,6 @@ def _scatter_prize_time(df: pd.DataFrame, title: str) -> Any:
             os.makedirs("output/img")
 
         plt.savefig(f"output/img/{title}.png")
-        plt.show()
+        display()
 
         return fig
-
-
-def analyze() -> None:
-    """Return info messages as dict, plot prize timeline and save both."""
-    # Create output folder for pictures
-    if not os.path.exists("output/img"):
-        os.makedirs("output/img")
-
-    # Read grades.
-    if not os.path.exists("input/input.csv"):
-        raise ValueError("'input.csv' not found")
-    df = pd.read_csv('input/input.csv', sep=';')
-    urls = df["link (str)"].tolist()
-    # Convert String in col to List[Union[float,int]]
-    grades = df['grades (list)'].apply(ast.literal_eval).tolist()
-
-    for row in range(len(df)):
-        # Get card_name from urls
-        card_name = _get_card_name(df.iloc[row,0])
-
-        # Important: Convert col to str b/c it is the most flexible type.
-        # Otherwise, one str can can convert the whole col to str.
-        df_out = pd.read_csv(f"output/data/{card_name}.csv", parse_dates=["date"])
-        df_out["grade"] = df_out['grade'].astype(str)
-
-        for g in grades[row]:
-
-            # Important: Parse grade as str due to reasons above.
-            g = str(float(g))
-
-            msg_grades = _str_unusual_grades(df_out, g)
-
-            msg_grades_n = _str_n_grade(df_out, g)
-
-            df_filt = _filter_grade_data(df_out, g)
-
-            msg_return = _str_comp_ann_g(df_filt)
-
-            card_dict = {
-                'ident': f"{card_name}-{g}",
-                'compound annual growth': msg_return,
-                'info grades number': msg_grades_n,
-            }
-            if msg_grades_n == None:
-                card_dict['info grades'] = msg_grades
-            else:
-                pass
-
-            print(card_dict)
-            if not os.path.exists("output/nmbrs"):
-                os.makedirs("output/nmbrs")
-
-            with open(f"output/nmbrs/{card_name}-grade-{g}.json", "w") as fp:
-                json.dump(card_dict, fp)
-
-            _scatter_prize_time(df_filt, f"{card_name}-grade-{g}")
