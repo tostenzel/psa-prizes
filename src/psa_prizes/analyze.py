@@ -102,6 +102,11 @@ def _str_unusual_grades(df: pd.DataFrame) -> Union[str, None]:
         )
 
 
+def _get_card_name(card_url: str) -> str:  # noqa: D102
+    c_name = card_url.split("-cards/")[1].split("/values")[0].replace("/", "-")
+    return c_name
+
+
 def _str_n_grade(df: pd.DataFrame, grade: str) -> str:
     """Print the number of cards with grade `grade`."""
     n_cards = len(df)
@@ -151,11 +156,6 @@ def _str_comp_ann_g(df: pd.DataFrame) -> str:
             f"– The compound annual growth rate from {min(years)} "
             f"to {max(years)} is {cagr}%."
         )
-
-
-def _get_card_name(card_url: str) -> str:  # noqa: D102
-    c_name = card_url.split("-cards/")[1].split("/values")[0].replace("/", "-")
-    return c_name
 
 
 def _scatter_prize_time(df: pd.DataFrame, title: str) -> Any:
