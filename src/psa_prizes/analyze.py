@@ -22,10 +22,13 @@ def _str_unusual_grades(df: pd.DataFrame, grade: str) -> None:
         except ValueError:
             catch_grades.append(item)
 
-    return (
-        f"– Over all grades, {len(catch_grades)} of {len(df)} cards do not receive"
-        f" standard grades. These grades are in {set(catch_grades)}"
-    )
+    if catch_grades == []:
+        return None
+    else:
+        return (
+            f"– Over all grades, {len(catch_grades)} of {len(df)} cards do not receive"
+            f" standard grades. These grades are in {set(catch_grades)}"
+        )
 
 
 def _str_n_grade(df: pd.DataFrame, grade: str) -> None:
@@ -160,10 +163,13 @@ def analyze() -> None:
 
             card_dict = {
                 'ident': f"{card_name}-{g}",
-                'info grades': msg_grades,
+                'compound annual growth': msg_return,
                 'info grades number': msg_grades_n,
-                'compound annual growth': msg_return
             }
+            if msg_grades_n == None:
+                card_dict['info grades'] = msg_grades
+            else:
+                pass
 
             print(card_dict)
             if not os.path.exists("output/nmbrs"):
@@ -173,10 +179,3 @@ def analyze() -> None:
                 json.dump(card_dict, fp)
 
             _scatter_prize_time(df_filt, f"{card_name}-grade-{g}")
-
-
-
-import os
-
-os.chdir("../../")
-analyze()

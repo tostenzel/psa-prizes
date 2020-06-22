@@ -1,9 +1,5 @@
 # My additions
-
-# Unignore only one file in output
-output/data/**
-!output/data/1999-pokemon-game-charizard-holo.csv
-
+output/
 /.idea/
 /.nox/
 /.python-version
