@@ -1,10 +1,10 @@
-"""Call the main functions. Used by poetry a main script."""
+"""Call the main functions. Used by `poetry` as main script."""
 
 from psa_prizes.analyze import analyze
-from psa_prizes.scrape import parse_scrape_store
+from psa_prizes.scrape import scrape
 
 
 def main() -> None:
     """Run psa-prizes."""
-    parse_scrape_store()
+    scrape()
     analyze()

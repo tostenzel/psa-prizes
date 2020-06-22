@@ -12,58 +12,77 @@ import pandas as pd
 
 
 def analyze() -> None:
-    """Return info messages as dict, plot prize timeline and save both."""
-    # Read grades.
+    """Return info messages as dict, plot prize timeline and save both.
+
+    Notes
+    -----
+    For some cards, the grade data is of type `str` instead of `int` or `float`.
+    pd.DataFrames assign the data-types column-wise by using the most compatible
+    type. For example, the grade "Authentic" for only one card causes pandas
+    to transform the whole column with grades in  {1.0, 1.5, ... 10.0} to be
+    stored as `str`. Therefore, all grades are converted to `str` for a unified
+    treatment. These strings are written like floats with one decimal place.
+
+    """
+    # Read grades. Delimeter has to be semicolon only.
     if not os.path.exists("input/input.csv"):
         raise ValueError("'input.csv' not found")
     df = pd.read_csv("input/input.csv", sep=";")
-    # Convert potential String in col to List[Union[float,int]]
+
+    # Convert List-String in input column to List[Union[float,int]].
     grades = df["grades (list)"].apply(ast.literal_eval).tolist()
 
+    # Iterate over cards in input DataFrame.
     for row in range(len(df)):
         # Get card_name from urls
         card_name = _get_card_name(df.iloc[row, 0])
 
-        # Important: Convert col to str b/c it is the most flexible type.
-        # Otherwise, one str can can convert the whole col to str.
+        # Important: Convert col to `str` as described in the notes.
         df_out = pd.read_csv(f"output/data/{card_name}.csv", parse_dates=["date"])
         df_out["grade"] = df_out["grade"].astype(str)
 
+        # Iterate over grades per card.
         for g in grades[row]:
 
-            # Important: Parse grade as str due to reasons above.
+            # Parse grade as str due to reasons above.
             g = str(float(g))
 
-            msg_grades = _str_unusual_grades(df_out, g)
+            # Info on grades outside {1.0, 1.5, ... 10.0}.
+            msg_grades = _str_unusual_grades(df_out)
 
+            # Info on the share with this grade.
             msg_grades_n = _str_n_grade(df_out, g)
 
+            # Drop rows with different grades.
             df_filt = _filter_grade_data(df_out, g)
 
+            # Compute compund annual growth rate (CAGR).
             msg_return = _str_comp_ann_g(df_filt)
 
+            # Store infos in dictionary and print.
             card_dict: Dict[str, Optional[str]] = {
                 "ident": f"{card_name}-{g}",
                 "compound annual growth": msg_return,
                 "info grades number": msg_grades_n,
             }
+            # Drop message if there are no unausual grades.
             if msg_grades_n is None:
                 pass
             else:
                 card_dict["info grades"] = msg_grades
-
             print(card_dict)
 
+            # Save dictionary.
             if not os.path.exists("output/nmbrs"):
                 os.makedirs("output/nmbrs")
-
             with open(f"output/nmbrs/{card_name}-grade-{g}.json", "w") as fp:
                 json.dump(card_dict, fp)
 
+            # Plot and save prize trend.
             _scatter_prize_time(df_filt, f"{card_name}-grade-{g}")
 
 
-def _str_unusual_grades(df: pd.DataFrame, grade: str) -> Union[str, None]:
+def _str_unusual_grades(df: pd.DataFrame) -> Union[str, None]:
     """Print the number of unusual grades."""
     grades = np.arange(0, 10.5, 0.5).astype(float)
     catch_grades = []

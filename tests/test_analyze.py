@@ -5,7 +5,7 @@ from psa_prizes.analyze import _str_comp_ann_g
 
 
 def test_str_comp_ann_g() -> None:
-    """Test a dataframe with 100% CAGR and missing and multiple entries per year."""
+    """Test a pd.DataFrame with 100% CAGR, missing and multiple entries per year."""
     data = {
         "date": ["10/06/2010", "10/06/2011", "10/06/2011", "10/06/2013", "10/06/2015"],
         "prize": [1, 2, 2, 2 ** 3, 2 ** 5],
