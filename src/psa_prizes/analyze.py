@@ -50,9 +50,6 @@ def analyze() -> None:
             # Info on grades outside {1.0, 1.5, ... 10.0}.
             msg_grades = _str_unusual_grades(df_out)
 
-            # Info on the share with this grade.
-            msg_grades_n = _str_n_grade(df_out, g)
-
             # Drop rows with different grades.
             df_filt = _filter_grade_data(df_out, g)
 
