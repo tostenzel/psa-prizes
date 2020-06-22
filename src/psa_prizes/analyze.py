@@ -134,7 +134,7 @@ def _str_comp_ann_g(df: pd.DataFrame) -> str:
         df["year"] = pd.DatetimeIndex(df["date"]).year
         df["avg_prize_in_year"] = df.groupby("year")["prize"].transform("mean")
 
-        # Create pd.DataFrame for annual average prizes
+        # Create pd.DataFrame for annual average prizes.
         years = df["year"].drop_duplicates()
         prizes = df["avg_prize_in_year"].drop_duplicates()
         avg_df = pd.DataFrame({"year": years, "prize": prizes})
@@ -148,7 +148,7 @@ def _str_comp_ann_g(df: pd.DataFrame) -> str:
         n = t_T - t_0
         cagr = R ** (1 / n) - 1
 
-        # Compute compound annual growth rate in percent
+        # Compute compound annual growth rate in percent.
         cagr = round(cagr * 100, 2)
 
         return (
@@ -168,12 +168,12 @@ def _scatter_prize_time(df: pd.DataFrame, title: str) -> Any:
 
         ax.scatter(df["date"], y, alpha=0.66)
 
-        # Draw red trend line
+        # Draw red trend line.
         fit = np.polyfit(x, y, deg=3)
         p = np.poly1d(fit)
         ax.plot(x, p(x), "r--")
 
-        # Rotate date labels
+        # Rotate date labels.
         fig.autofmt_xdate()
 
         ax.grid(linestyle="-", color="black", alpha=0.25)
