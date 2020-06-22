@@ -13,3 +13,7 @@
 .. image:: https://api.codacy.com/project/badge/Grade/87ad6f0069fd45d9afd5ad97a579329b
    :alt: Codacy Badge
    :target: https://app.codacy.com/manual/tostenzel/psa-prizes?utm_source=github.com&utm_medium=referral&utm_content=tostenzel/psa-prizes&utm_campaign=Badge_Grade_Dashboard
+
+.. image:: https://api.codacy.com/project/badge/Grade/5dea9807b51c4cc69aa2d9431ae912c2
+   :alt: Codacy Badge
+   :target: https://app.codacy.com/manual/tostenzel/psa-prizes?utm_source=github.com&utm_medium=referral&utm_content=tostenzel/psa-prizes&utm_campaign=Badge_Grade_Dashboard
