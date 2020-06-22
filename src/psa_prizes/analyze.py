@@ -140,7 +140,6 @@ def _get_card_name(card_url: str) -> str:  # noqa: D102
 
 
 def _scatter_prize_time(df: pd.DataFrame, title: str) -> Any:
-
     if df.empty is True:
         print("No prize data, no plot.")
     else:
