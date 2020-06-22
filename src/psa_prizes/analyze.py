@@ -4,7 +4,6 @@ import json
 import os
 from typing import Any, Dict, Optional, Union
 
-from IPython import display
 import matplotlib.dates as dates
 import matplotlib.pyplot as plt
 import numpy as np
@@ -49,6 +48,9 @@ def analyze() -> None:
 
             # Info on grades outside {1.0, 1.5, ... 10.0}.
             msg_grades = _str_unusual_grades(df_out)
+
+            # Info on the share with this grade.
+            msg_grades_n = _str_n_grade(df_out, g)
 
             # Drop rows with different grades.
             df_filt = _filter_grade_data(df_out, g)
@@ -186,6 +188,6 @@ def _scatter_prize_time(df: pd.DataFrame, title: str) -> Any:
             os.makedirs("output/img")
 
         plt.savefig(f"output/img/{title}.png")
-        display()
+        plt.show()
 
         return fig
