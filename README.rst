@@ -10,6 +10,6 @@
 .. image:: https://codecov.io/gh/tostenzel/psa-prizes/branch/master/graph/badge.svg
   :target: https://codecov.io/gh/tostenzel/psa-prizes
 
-.. image:: https://api.codacy.com/project/badge/Grade/87ad6f0069fd45d9afd5ad97a579329b
+.. image:: https://app.codacy.com/project/badge/Grade/8b4d19500d434a18a899405d71d2654e
    :alt: Codacy Badge
    :target: https://app.codacy.com/manual/tostenzel/psa-prizes?utm_source=github.com&utm_medium=referral&utm_content=tostenzel/psa-prizes&utm_campaign=Badge_Grade_Dashboard
