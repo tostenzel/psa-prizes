@@ -1,4 +1,5 @@
 """Analysis tools."""
+import ast
 import json
 import os
 from typing import Any, List, Union
@@ -33,7 +34,7 @@ def _str_n_grade(df: pd.DataFrame, grade: str) -> None:
     n_grade = len(df[(df["grade"]) == grade])
     perc = round((n_grade / n_cards) * 100, 2)
 
-    print(
+    return (
         f"– The number of cards with grade {grade} is {n_grade} "
         f"of {n_cards} cards. That is {perc}%."
     )
@@ -49,32 +50,30 @@ def _filter_grade_data(df: pd.DataFrame, grade: str) -> pd.DataFrame:
 
 def _str_comp_ann_g(df: pd.DataFrame) -> None:
     """Print the average annual prize growth."""
-    df["year"] = pd.DatetimeIndex(df["date"]).year
-    df["avg_prize_in_year"] = df.groupby("year")["prize"].transform("mean")
 
-    # Create pd.DataFrame for annual average prizes
-    years = df["year"].drop_duplicates()
-    prizes = df["avg_prize_in_year"].drop_duplicates()
-    avg_df = pd.DataFrame({"year": years, "prize": prizes})
-
-    # cagr = (1 + R) ** (1 / n) - 1
-    t_0 = min(avg_df["year"])
-    t_T = max(avg_df["year"])
-    p_0 = avg_df[t_0 == avg_df['year']]['prize'].iloc[0]
-    p_T = avg_df[t_T == avg_df['year']]['prize'].iloc[0]
-    R = p_T / p_0
-    n = t_T - t_0
-    cagr = (1 + R) ** (1 / n) - 1
-
-    # Compute compound annual growth rate in percent
-    cagr = round(cagr * 100, 2)
-
-    if np.isnan(cagr):
-        return (
-            "– Cannot compute compound annual growth rate. "
-            "Perhaps not enough observations."
-        )
+    if df.empty is True:
+        return "There is no prize data for this grade."
     else:
+        df["year"] = pd.DatetimeIndex(df["date"]).year
+        df["avg_prize_in_year"] = df.groupby("year")["prize"].transform("mean")
+
+        # Create pd.DataFrame for annual average prizes
+        years = df["year"].drop_duplicates()
+        prizes = df["avg_prize_in_year"].drop_duplicates()
+        avg_df = pd.DataFrame({"year": years, "prize": prizes})
+
+        # cagr = (1 + R) ** (1 / n) - 1
+        t_0 = min(avg_df["year"])
+        t_T = max(avg_df["year"])
+        p_0 = avg_df[t_0 == avg_df['year']]['prize'].iloc[0]
+        p_T = avg_df[t_T == avg_df['year']]['prize'].iloc[0]
+        R = p_T / p_0
+        n = t_T - t_0
+        cagr = (1 + R) ** (1 / n) - 1
+
+        # Compute compound annual growth rate in percent
+        cagr = round(cagr * 100, 2)
+
         return (
             f"– The compound annual growth rate from {min(years)} "
             f"to {max(years)} is {cagr}%."
@@ -87,65 +86,80 @@ def _get_card_name(card_url: str) -> str:  # noqa: D102
 
 
 def _scatter_prize_time(df: pd.DataFrame, title: str) -> Any:
-    x = mdates.date2num(df["date"])
-    y = df["prize"]
 
-    fig, ax = plt.subplots(figsize=(12, 9))
+    if df.empty is True:
+        print("No prize data, no plot.")
+    else:
+        x = mdates.date2num(df["date"])
+        y = df["prize"]
 
-    ax.scatter(df["date"], y, alpha=0.66)
+        fig, ax = plt.subplots(figsize=(12, 9))
 
-    # Draw red trend line
-    fit = np.polyfit(x, y, deg=3)
-    p = np.poly1d(fit)
-    ax.plot(x, p(x), "r--")
+        ax.scatter(df["date"], y, alpha=0.66)
 
-    # Rotate date labels
-    fig.autofmt_xdate()
+        # Draw red trend line
+        fit = np.polyfit(x, y, deg=3)
+        p = np.poly1d(fit)
+        ax.plot(x, p(x), "r--")
 
-    ax.grid(linestyle="-", color="black", alpha=0.25)
-    ax.tick_params(length=6, width=2, labelsize=20)
-    ax.set_title(title, fontsize=22)
-    ax.set_xlabel(xlabel="Date", size=26, labelpad=14)
-    ax.set_ylabel(ylabel="Prize in $", size=26, labelpad=14)
+        # Rotate date labels
+        fig.autofmt_xdate()
 
-    fig.tight_layout()
+        ax.grid(linestyle="-", color="black", alpha=0.25)
+        ax.tick_params(length=6, width=2, labelsize=20)
+        ax.set_title(title, fontsize=22)
+        ax.set_xlabel(xlabel="Date", size=26, labelpad=14)
+        ax.set_ylabel(ylabel="Prize in $", size=26, labelpad=14)
 
-    return fig
+        fig.tight_layout()
+
+        if not os.path.exists("output/img"):
+            os.makedirs("output/img")
+
+        plt.savefig(f"output/img/{title}.png")
+        plt.show()
+
+        return fig
 
 
-def analyze(grades: List[Union[float, int]]) -> None:
-    """Print info messages and plot prize timeline."""
+def analyze() -> None:
+    """Return info messages as dict, plot prize timeline and save both."""
     # Create output folder for pictures
     if not os.path.exists("output/img"):
         os.makedirs("output/img")
 
-    # Read in urls from urls.txt
-    if not os.path.exists("input/urls.txt"):
-        raise ValueError("no input url passed or 'urls.txt' not found")
-    with open("input/urls.txt") as f:
-        urls = [n for n in f.read().split("\n") if n]
+    # Read grades.
+    if not os.path.exists("input/input.csv"):
+        raise ValueError("'input.csv' not found")
+    df = pd.read_csv('input/input.csv', sep=';')
+    urls = df["link (str)"].tolist()
+    # Convert String in col to List[Union[float,int]]
+    grades = df['grades (list)'].apply(ast.literal_eval).tolist()
 
-    for url in urls:
+    for row in range(len(df)):
         # Get card_name from urls
-        card_name = _get_card_name(url)
+        card_name = _get_card_name(df.iloc[row,0])
 
-        df = pd.read_csv(f"output/data/{card_name}.csv", parse_dates=["date"])
+        # Important: Convert col to str b/c it is the most flexible type.
+        # Otherwise, one str can can convert the whole col to str.
+        df_out = pd.read_csv(f"output/data/{card_name}.csv", parse_dates=["date"])
+        df_out["grade"] = df_out['grade'].astype(str)
 
-        # Important: Parse col as str because one str may convert the whole col to str
-        df["grade"] = df["grade"].astype(str)
-        grades_str: List[str] = [str(float(g)) for g in grades]
+        for g in grades[row]:
 
-        for g in grades_str:
-            msg_grades = _str_unusual_grades(df, g)
+            # Important: Parse grade as str due to reasons above.
+            g = str(float(g))
 
-            msg_grades_n = _str_n_grade(df, g)
+            msg_grades = _str_unusual_grades(df_out, g)
 
-            df_filt = _filter_grade_data(df, g)
+            msg_grades_n = _str_n_grade(df_out, g)
+
+            df_filt = _filter_grade_data(df_out, g)
 
             msg_return = _str_comp_ann_g(df_filt)
 
             card_dict = {
-                'ident': card_name,
+                'ident': f"{card_name}-{g}",
                 'info grades': msg_grades,
                 'info grades number': msg_grades_n,
                 'compound annual growth': msg_return
@@ -160,16 +174,9 @@ def analyze(grades: List[Union[float, int]]) -> None:
 
             _scatter_prize_time(df_filt, f"{card_name}-grade-{g}")
 
-            path_img = f"output/img/{card_name}-grade-{g}.png"
-
-            if not os.path.exists("output/img"):
-                os.makedirs("output/img")
-
-            plt.savefig(f"output/img/{card_name}-grade-{g}.png")
-            plt.show()
 
 
 import os
 
 os.chdir("../../")
-analyze([8, 9])
+analyze()

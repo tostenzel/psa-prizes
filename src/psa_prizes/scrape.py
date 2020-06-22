@@ -13,10 +13,11 @@ import requests
 def parse_scrape_store() -> None:
     """Parse urls to `scrape_psa_prizes` and store as .csv-files."""
     # Read in urls from urls.txt
-    if not os.path.exists("input/urls.txt"):
-        raise ValueError("no input url passed and 'urls.txt' not found")
-    with open("input/urls.txt") as f:
-        urls = [n for n in f.read().split("\n") if n]
+    if not os.path.exists("input/input.csv"):
+        raise ValueError("'input.csv' not found")
+
+    df = pd.read_csv('input/input.csv', sep=';')
+    urls = df["link (str)"].tolist()
 
     # If psa-prizes/output/data doesn't exist, create it
     if not os.path.exists("output/data"):
@@ -179,3 +180,4 @@ def _get_psa_certs(soup: Any) -> List[int]:  # noqa: D102
 def _get_file_name(card_url: str) -> str:  # noqa: D102
     f_name = card_url.split("-cards/")[1].split("/values")[0].replace("/", "-")
     return "{}.csv".format(os.path.join("output/data", f_name))
+
