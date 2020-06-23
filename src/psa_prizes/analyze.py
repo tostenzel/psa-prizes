@@ -172,7 +172,7 @@ def _scatter_prize_time(df: pd.DataFrame, title: str) -> Any:
         ax.scatter(df["date"], y, alpha=0.66)
 
         # Draw red trend line.
-        fit = np.polyfit(x, y, deg=3)
+        fit = np.polyfit(x, y, deg=20)
         p = np.poly1d(fit)
         ax.plot(x, p(x), "r--")
 
