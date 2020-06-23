@@ -69,7 +69,10 @@ def analyze() -> None:
                 pass
             else:
                 card_dict["info grades"] = msg_grades
-            print(card_dict)
+
+            # Print info.
+            for v in card_dict.values():
+                print(v)
 
             # Save dictionary.
             if not os.path.exists("output/nmbrs"):

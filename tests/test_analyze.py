@@ -1,4 +1,4 @@
-"""Test module `test_analyze`."""
+"""Test module `analyze`."""
 
 import pandas as pd
 from psa_prizes.analyze import _str_comp_ann_g
