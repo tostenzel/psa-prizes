@@ -21,34 +21,34 @@ psa-prizes
 About
 =====
 
-lalala
+PSA-prizes is a Python package for simple prize analyses of PSA-graded trading cards.
+
+PSA (Professional Sports Authenticator) grades the authenticity and condition of sport cards, such as baseball and basketball, and cards from TCGs (trading card games) like Magic, Yu-Gi-Oh! and Pokémon. These `grades <https://www.psacard.com/resources/gradingstandards#cards>`_ provide credible categories for these sensible collectibles in which prizes can be compared.
 
 Features
 ========
 
-lalala
-
 Web Scraping
 ------------
 
-lalala
+- Scrape the comprehensive data recorded by PSA on public sales of certified cards from the `Auction Prizes <https://www.psacard.com/auctionprices/>`_ section of their website
 
 Basic Analysis
 --------------
 
-lalala
-
-Example
--------
-
-lalala
+- Compute the compound annual growth rate (CAGR) and numbers on the grade distribution, record unusual grade types and plot the paid prizes in publicly finalized trades over time
 
 Installation
 ============
 
 lalala
 
+Example
+=======
+
+lalala
+
 Documentation
 =============
 
-lalala
+The documentation is hosted on `rtd <https://psa-prizes.readthedocs.io/en/latest>`_.
