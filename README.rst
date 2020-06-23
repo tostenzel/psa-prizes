@@ -87,7 +87,7 @@ Data, information and plots are saved to ``/output/``. Additionally, the informa
 .. raw:: html
 
     <p align="center">
-    <img src="docs/source/img/pokemon-game-charizard-holo-1st-edition-grade-9.0.png" height="450px">
+    <img src="docs/source/img/pokemon-game-charizard-holo-1st-edition-grade-8.0.png" height="450px">
     </p>
 
 
