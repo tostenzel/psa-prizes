@@ -23,7 +23,7 @@ About
 
 *PSA-prizes* is a Python package for simple prize analyses of PSA-graded trading cards.
 
-`PSA <https://www.psacard.com>`_ (Professional Sports Authenticator) grades the authenticity and condition of sport cards, such as baseball and basketball, and cards from TCGs (trading card games) like Magic, Yu-Gi-Oh! and Pokémon. These `grades <https://www.psacard.com/resources/gradingstandards#cards>`_ provide credible categories for these sensible collectibles in which prizes can be compared.
+`PSA <https://www.psacard.com>`_ (Professional Sports Authenticator) grades the authenticity and condition of sport cards, such as baseball and basketball cards, and cards from TCGs (trading card games) like Magic, Yu-Gi-Oh! and Pokémon. The `grades <https://www.psacard.com/resources/gradingstandards#cards>`_ provide credible categories for these sensible collectibles in which prizes can be compared.
 
 Features
 ========
@@ -67,7 +67,7 @@ Example
 Specify the cards and grades of interest in ``/input/input.csv`` (`Click <https://github.com/tostenzel/psa-prizes/blob/master/input/input.csv>`_ for an example):
 
  - Paste the respective `item link <https://www.psacard.com/auctionprices>`_ to the first column
- - Write the respective grades to the second column as a list in Python syntax.
+ - Write the respective grades to the second column as a list in Python syntax
 
 If you write in the file through a GUI-based program, make sure to keep **;** as the only column delimeter.
 
@@ -77,7 +77,12 @@ Run *PSA-prizes*:
 
     $ poetry run psa-prizes
 
-Data, information and plots are saved to ``/output/``. Additionally, the information is printed to the terminal and the plot is pictured for each card-grade pair. An example plot is shown below.
+Data, information and plots are saved to ``/output/``. Additionally, the information is printed to the terminal and the plot is pictured for each card-grade pair. An example output is shown below.
+
+>>> – The compound annual growth rate from 2016 to 2020 is 61.13%.
+>>> – The number of cards with grade 8.0 is 119 of 562 cards. That is 21.17%.
+>>> – Over all grades, 6 of 562 cards do not receive standard grades. These grades are in {'Authentic', 'nan'}
+
 
 .. raw:: html
 
