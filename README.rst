@@ -1,3 +1,7 @@
+==========
+psa-prizes
+==========
+
 .. image:: https://badge.fury.io/py/psa-prizes.svg
   :target: https://pypi.org/project/psa-prizes
 
@@ -13,3 +17,38 @@
 .. image:: https://app.codacy.com/project/badge/Grade/8b4d19500d434a18a899405d71d2654e
    :alt: Codacy Badge
    :target: https://app.codacy.com/manual/tostenzel/psa-prizes?utm_source=github.com&utm_medium=referral&utm_content=tostenzel/psa-prizes&utm_campaign=Badge_Grade_Dashboard
+
+About
+=====
+
+lalala
+
+Features
+========
+
+lalala
+
+Web Scraping
+------------
+
+lalala
+
+Basic Analysis
+--------------
+
+lalala
+
+Example
+-------
+
+lalala
+
+Installation
+============
+
+lalala
+
+Documentation
+=============
+
+lalala
