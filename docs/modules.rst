@@ -1,14 +1,25 @@
 Modules
 =======
 
+
 .. contents::
     :local:
     :backlinks: none
 
 
-psa_prizes.psa_scrape
----------------------
+
+psa_prizes.scrape
+-----------------
 
 
-.. automodule:: psa_prizes.psa_scrape
+.. automodule:: psa_prizes.scrape
+   :members:
+
+
+
+psa_prizes.analyze
+------------------
+
+
+.. automodule:: psa_prizes.analyze
    :members:
