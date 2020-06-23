@@ -80,7 +80,9 @@ Run *PSA-prizes*:
 Data, information and plots are saved to ``/output/``. Information and plots are also printed in the terminal for each card-grade pair.
 
 .. image:: docs/source/img/pokemon-game-charizard-holo-1st-edition-grade-9.0.png
-  :width: 300
+   :height: 400 px
+   :width: 400 px
+   :align: center
 
 Documentation
 =============
