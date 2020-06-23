@@ -41,12 +41,36 @@ Basic Analysis
 Installation
 ============
 
-lalala
+Clone the package to a local directory:
+
+.. code:: console
+
+    $ git clone https://github.com/tostenzel/psa-prizes
+
+Install the dependency manager Poetry by downloading and running get-poetry.py:
+
+.. code:: console
+
+    $ python get-poetry.py
+
+Change directory to psa-prizes and install dependencies:
+
+.. code:: console
+
+    $ cd psa_prizes
+    $ poetry install
 
 Example
 =======
 
-lalala
+Specify the cards of interest as described here...
+
+
+Finally, run psa-prizes:
+
+.. code:: console
+
+    $ poetry run psa-prizes
 
 Documentation
 =============
