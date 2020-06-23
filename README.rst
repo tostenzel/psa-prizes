@@ -47,7 +47,7 @@ Clone the package to a local directory:
 
     $ git clone https://github.com/tostenzel/psa-prizes
 
-Install the dependency manager Poetry by downloading and running get-poetry.py:
+Install the dependency manager `Poetry <https://github.com/python-poetry/poetry>`_ by downloading and running get-poetry.py:
 
 .. code:: console
 
@@ -63,10 +63,14 @@ Change directory to psa-prizes and install dependencies:
 Example
 =======
 
-Specify the cards of interest as described here...
+Specify the cards and grades of interest in ``input/input.csv`` (`Click <https://github.com/tostenzel/psa-prizes/blob/master/input/input.csv>`_ for an example):
 
+ - Paste the respective `item link <https://www.psacard.com/auctionprices>`_ in the first column
+ - Write the respective grades to the second column as a list in Python syntax.
 
-Finally, run psa-prizes:
+If you write in the file through a GUI-based program, make sure to keep **;** as the only column delimeter.
+
+Run psa-prizes:
 
 .. code:: console
 
