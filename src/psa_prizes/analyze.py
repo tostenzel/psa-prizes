@@ -65,7 +65,7 @@ def analyze() -> None:
                 "info grades number": msg_grades_n,
             }
             # Drop message if there are no unausual grades.
-            if msg_grades_n is None:
+            if msg_grades is None:
                 pass
             else:
                 card_dict["info grades"] = msg_grades
