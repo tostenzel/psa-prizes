@@ -77,12 +77,14 @@ Run *PSA-prizes*:
 
     $ poetry run psa-prizes
 
-Data, information and plots are saved to ``/output/``. Information and plots are also printed in the terminal for each card-grade pair.
+Data, information and plots are saved to ``/output/``. Additionally, the information is printed to the terminal and the plot is pictured for each card-grade pair. An example plot is shown below.
 
-.. image:: docs/source/img/pokemon-game-charizard-holo-1st-edition-grade-9.0.png
-   :height: 400 px
-   :width: 400 px
-   :align: center
+.. raw:: html
+
+    <p align="center">
+    <img src="docs/source/img/pokemon-game-charizard-holo-1st-edition-grade-9.0.png" height="450px">
+    </p>
+
 
 Documentation
 =============
