@@ -1,5 +1,5 @@
 ==========
-psa-prizes
+PSA-prizes
 ==========
 
 .. image:: https://badge.fury.io/py/psa-prizes.svg
@@ -21,7 +21,7 @@ psa-prizes
 About
 =====
 
-PSA-prizes is a Python package for simple prize analyses of PSA-graded trading cards.
+*PSA-prizes* is a Python package for simple prize analyses of PSA-graded trading cards.
 
 `PSA <https://www.psacard.com>`_ (Professional Sports Authenticator) grades the authenticity and condition of sport cards, such as baseball and basketball, and cards from TCGs (trading card games) like Magic, Yu-Gi-Oh! and Pokémon. These `grades <https://www.psacard.com/resources/gradingstandards#cards>`_ provide credible categories for these sensible collectibles in which prizes can be compared.
 
@@ -47,13 +47,14 @@ Clone the package to a local directory:
 
     $ git clone https://github.com/tostenzel/psa-prizes
 
+
 Install the dependency manager `Poetry <https://github.com/python-poetry/poetry>`_ by downloading and running get-poetry.py:
 
 .. code:: console
 
     $ python get-poetry.py
 
-Change directory to psa-prizes and install dependencies:
+Change directory to ``/psa-prizes/`` and install dependencies:
 
 .. code:: console
 
@@ -63,18 +64,20 @@ Change directory to psa-prizes and install dependencies:
 Example
 =======
 
-Specify the cards and grades of interest in ``input/input.csv`` (`Click <https://github.com/tostenzel/psa-prizes/blob/master/input/input.csv>`_ for an example):
+Specify the cards and grades of interest in ``/input/input.csv`` (`Click <https://github.com/tostenzel/psa-prizes/blob/master/input/input.csv>`_ for an example):
 
- - Paste the respective `item link <https://www.psacard.com/auctionprices>`_ in the first column
+ - Paste the respective `item link <https://www.psacard.com/auctionprices>`_ to the first column
  - Write the respective grades to the second column as a list in Python syntax.
 
 If you write in the file through a GUI-based program, make sure to keep **;** as the only column delimeter.
 
-Run psa-prizes:
+Run *PSA-prizes*:
 
 .. code:: console
 
     $ poetry run psa-prizes
+
+Data, information and plots are saved to ``/output/``. Information and plots are also printed in the terminal for each card-grade pair.
 
 Documentation
 =============
