@@ -48,11 +48,11 @@ Clone the package to a local directory:
     $ git clone https://github.com/tostenzel/psa-prizes
 
 
-Install the dependency manager `Poetry <https://github.com/python-poetry/poetry>`_ by downloading and running get-poetry.py:
+Install the dependency manager `Poetry <https://github.com/python-poetry/poetry>`_:
 
 .. code:: console
 
-    $ python get-poetry.py
+    $ curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
 
 Change directory to ``/psa-prizes/`` and install dependencies:
 
@@ -79,9 +79,11 @@ Run *PSA-prizes*:
 
 Data, information and plots are saved to ``/output/``. Additionally, the information is printed to the terminal and the plot is pictured for each card-grade pair. An example output is shown below.
 
->>> – The compound annual growth rate from 2016 to 2020 is 61.13%.
->>> – The number of cards with grade 8.0 is 119 of 562 cards. That is 21.17%.
->>> – Over all grades, 6 of 562 cards do not receive standard grades. These grades are in {'Authentic', 'nan'}
+.. code:: console
+
+    – The compound annual growth rate from 2016 to 2020 is 61.13%.
+    – The number of cards with grade 8.0 is 119 of 562 cards. That is 21.17%.
+    – Over all grades, 6 of 562 cards do not receive standard grades. These grades are in {'Authentic', 'nan'}
 
 
 .. raw:: html
