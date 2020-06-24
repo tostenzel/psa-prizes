@@ -15,8 +15,6 @@ psa_prizes.scrape
 .. automodule:: psa_prizes.scrape
    :members:
 
-
-
 psa_prizes.analyze
 ------------------
 
