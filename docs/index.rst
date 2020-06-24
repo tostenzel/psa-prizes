@@ -1,6 +1,15 @@
 Documentation of the `psa-prices` package
 ====================================================
 
+Structure
+=========
+
+.. toctree::
+   :hidden:
+   :maxdepth: 1
+
+   license
+   modules
 
 ==========
 PSA-prizes
@@ -95,12 +104,3 @@ Data, information and plots are saved to ``/output/``. Additionally, the informa
     <p align="center">
     <img src="docs/source/img/pokemon-game-charizard-holo-1st-edition-grade-8.0.png" height="450px">
     </p>
-
-
-.. toctree::
-   :hidden:
-   :maxdepth: 1
-
-   license
-   modules
-
