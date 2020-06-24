@@ -97,13 +97,6 @@ Data, information and plots are saved to ``/output/``. Additionally, the informa
     </p>
 
 
-Documentation
-=============
-
-The documentation is hosted on `rtd <https://psa-prizes.readthedocs.io/en/latest>`_.
-
-
-
 .. toctree::
    :hidden:
    :maxdepth: 1
