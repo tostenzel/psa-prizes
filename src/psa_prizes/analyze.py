@@ -149,15 +149,22 @@ def _str_comp_ann_g(df: pd.DataFrame) -> str:
         p_T = avg_df[t_T == avg_df["year"]]["prize"].iloc[0]
         R = p_T / p_0
         n = t_T - t_0
-        cagr = R ** (1 / n) - 1
 
-        # Compute compound annual growth rate in percent.
-        cagr = round(cagr * 100, 2)
+        if n == 0:
+            return (
+                "– The compound annual growth rate cannot be computed because "
+                "there is no data from multiple years available."
+            )
+        else:
+            cagr = R ** (1 / n) - 1
 
-        return (
-            f"– The compound annual growth rate from {min(years)} "
-            f"to {max(years)} is {cagr}%."
-        )
+            # Compute compound annual growth rate in percent.
+            cagr = round(cagr * 100, 2)
+
+            return (
+                f"– The compound annual growth rate from {min(years)} "
+                f"to {max(years)} is {cagr}%."
+            )
 
 
 def _scatter_prize_time(df: pd.DataFrame, title: str) -> Any:
